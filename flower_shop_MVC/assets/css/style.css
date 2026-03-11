@@ -1,0 +1,163 @@
+.bg-green-100{
+    background-color:#e8fff4;
+}
+.text-green-300{
+    color: rgb(147, 242, 147);
+}
+.search-box{
+    display:flex;
+    align-items:center;
+}
+.logo{
+    height: 40px;
+}
+.card-size-img img{
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.title-section{
+    text-align:center;
+    font-weight:600;
+    margin-bottom:40px;
+    position:relative;
+}
+
+.title-section::after{
+    content:"";
+    width:220px;
+    height:2px;
+    background:#ff4d6d;
+    display:block;
+    margin:10px auto 0;
+    border-radius:5px;
+}
+/*Reponsive mobile cho search bar*/
+@media (max-width:576px){
+    .search-box{
+        width:100%;
+        margin-top:10px;
+    }
+    #searchInput{
+        display:block !important;
+        max-width:100%;
+    }
+}
+/*Design cho footer*/
+.flower-footer{
+    background:#e8f6ef;
+    padding:40px 0;
+    color:#3d8f5b;
+}
+
+.footer-title{
+    font-weight:600;
+    margin-bottom:15px;
+}
+
+.footer-links{
+    list-style:none;
+    padding:0;
+}
+
+.footer-links li{
+    margin-bottom:8px;
+}
+
+.footer-links a{
+    text-decoration:none;
+    color:#3d8f5b;
+}
+
+.footer-links a:hover{
+    color:#6bcf7f;
+}
+
+.social a{
+    font-size:20px;
+    margin-right:10px;
+    text-decoration:none;
+}
+
+.copyright{
+    font-size:14px;
+}
+/*Design cho banner sale*/
+.big-banner img{
+    width:100%;
+    border-radius:8px;
+}
+
+.small-banner img{
+    width:100%;
+    border-radius:8px;
+}
+
+.flash-sale{
+    border:1px solid #ddd;
+    padding:10px;
+    border-radius:8px;
+}
+
+.flash-sale h5{
+    display:flex;
+    justify-content:space-between;
+    font-weight:bold;
+}
+
+.time{
+    background:#333;
+    color:white;
+    padding:3px 6px;
+    border-radius:4px;
+    font-size:14px;
+}
+
+.product{
+    text-align:center;
+}
+
+.price .new{
+    color:#3b82f6;
+    font-weight:bold;
+}
+
+.price .old{
+    text-decoration:line-through;
+    color:gray;
+    margin-left:5px;
+}
+/*Design cho ảnh banner*/
+.carousel-item img{
+    height:255px;
+    object-fit:cover;
+}
+.small-banner{
+    width:100%;
+    height:120px;  
+    overflow:hidden;
+}
+
+.small-banner img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    border-radius:8px;
+}
+.baner-sale img {
+    height:127px;
+    object-fit:cover;
+    border-radius: 15px;
+}
+#bannerSlide{
+    overflow:hidden;
+}
+
+.banner-img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+}
+.carousel-item{
+    transition: transform 1s ease-in-out;
+}

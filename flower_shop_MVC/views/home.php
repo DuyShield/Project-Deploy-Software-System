@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+</head>
+<?php require "views/layout/header.php"; ?>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+
+            <!-- Main Banner -->
+            <div class="col-md-6">
+                <div id="bannerSlide" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="assets/images/main-banner.jpg" class="d-block w-100 rounded">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="assets/images/main-banner1.jpg" class="d-block w-100 rounded">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="assets/images/main-banner2.jpg" class="d-block w-100 rounded">
+                        </div>
+                    </div>
+                    <!-- nút chuyển -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#bannerSlide"
+                        data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#bannerSlide"
+                        data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <!-- Right Banner -->
+            <div class="col-md-3">
+                <!-- Banner 1 -->
+                <div class="small-banner mb-3">
+                    <img src="assets/images/banner1.jpg" class="img-fluid">
+                </div>
+                <!-- Banner 2 -->
+                <div class="small-banner mb-3">
+                    <img src="assets/images/banner2.jpg" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- Flash sale -->
+                <div class="flash-sale baner-sale">
+                    <h5 style="color:red;">FLASH SALE
+                        <span class="time" id="countdown">07 : 04 : 29</span>
+                    </h5>
+                    <div class="product">
+                        <img src="assets/images/hoa_hong.jpg" class="img-fluid img-banner-sale">
+
+                        <h6>Hoa Hồng</h6>
+
+                        <div class="price">
+                            <span class="new">120,000 đ</span>
+                            <span class="old">240,000 đ</span>
+                        </div>
+
+                        <div class="rating">
+                            ⭐ 5.0 (49)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <h2 class="title-section">Danh sách hoa</h2>
+        <div class="row">
+            <?php foreach ($products as $row) { ?>
+                <div class="col-md-3">
+                    <div class="card mb-4 card-size-img">
+                        <!--Logo card-->
+                        <img src="assets/images/<?php echo $row['image']; ?>" class="card-img-top">
+                        <!--Information product-->
+                        <div class="card-body">
+                            <h5><?php echo $row['name_product']; ?></h5>
+                            <p class="text-danger">
+                                <?php echo number_format($row['price_product']); ?> VNĐ
+                            </p>
+                            <a href="index.php?action=detail&id=<?php echo $row['id_product']; ?>" class="btn btn-primary">
+                                Xem chi tiết
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            <?php } ?>
+        </div>
+    </div>
+</body>
+<?php require "views/layout/footer.php"; ?>
+
+</html>
