@@ -5,7 +5,6 @@ require_once "controllers/C_Product.php";
 $controller = new C_Product();
 
 $action = isset($_GET['action']) ? $_GET['action'] : "home";
-
 switch($action){
 
     case "home":

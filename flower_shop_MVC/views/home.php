@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-</head>
 <?php require "views/layout/header.php"; ?>
-<script src="assets/js/bootstrap.bundle.min.js"></script>
 <body>
     <div class="container mt-4">
         <div class="row">
@@ -96,5 +89,3 @@
     </div>
 </body>
 <?php require "views/layout/footer.php"; ?>
-
-</html>

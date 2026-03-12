@@ -17,7 +17,7 @@
             <div class="col-md-4">
                 <h5 class="footer-title">Liên kết</h5>
                 <ul class="footer-links">
-                    <li><a href="#">Trang chủ</a></li>
+                    <li><a href="index.php">Trang chủ</a></li>
                     <li><a href="#">Sản phẩm</a></li>
                     <li><a href="#">Giỏ hàng</a></li>
                     <li><a href="#">Liên hệ</a></li>

@@ -96,7 +96,7 @@
 .flash-sale{
     border:1px solid #ddd;
     padding:10px;
-    border-radius:8px;
+    border-radius:10px;
 }
 
 .flash-sale h5{
@@ -109,8 +109,8 @@
     background:#333;
     color:white;
     padding:3px 6px;
-    border-radius:4px;
-    font-size:14px;
+    border-radius:5px;
+    font-size:15px;
 }
 
 .product{

@@ -17,7 +17,7 @@ class M_Product {
 
     public function getProductById($id){
 
-        $sql = "SELECT * FROM products WHERE id = ?";
+        $sql = "SELECT * FROM products WHERE id_product = ?";
         $result = $this->db->select($sql,"i",[$id]);
 
         return $result[0] ?? null;
