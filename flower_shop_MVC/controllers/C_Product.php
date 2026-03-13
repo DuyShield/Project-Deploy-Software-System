@@ -1,24 +1,28 @@
 <?php
 require_once "model/M_Product.php";
+class C_Product
+{
 
-class C_Product {
-
-    public function home(){
-
+    public function home()
+    {
         $model = new M_Product();
         $products = $model->getAllProducts();
-
         include "views/home.php";
     }
 
-    public function detail(){
-
+    public function detail()
+    {
         $id = $_GET['id'];
-
         $model = new M_Product();
         $product = $model->getProductById($id);
-
         include "views/product_detail.php";
     }
-
+    public function search()
+    {
+        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : "";
+        $model = new M_Product();
+        $products = $model->searchProducts($keyword);
+        $isSearch = true;
+        include "views/home.php";
+    }
 }

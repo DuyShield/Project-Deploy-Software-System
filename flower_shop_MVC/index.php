@@ -10,11 +10,12 @@ switch($action){
     case "home":
         $controller->home();
         break;
-
     case "detail":
         $controller->detail();
         break;
-
+    case "search":
+        $controller->search();
+        break;
     default:
         echo "404 Not Found";
 }

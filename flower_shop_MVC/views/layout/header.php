@@ -12,8 +12,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-green-100 sticky-top" 
-        style="border-bottom:1px green solid;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-green-100 sticky-top" style="border-bottom:1px green solid;">
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
@@ -38,13 +37,14 @@
                     </li>
                 </ul>
                 <!-- Search -->
-                <form class="d-flex">
+                <form class="d-flex" method="GET" action="index.php">
                     <div class="search-box d-flex align-items-center">
                         <button type="button" class="btn btn-search me-2" onclick="toggleSearch()">
                             🔍
                         </button>
                         <input type="text" id="searchInput" class="form-control" placeholder="Search flower..."
-                            style="display:none;">
+                            style="display:none;" name="keyword">
+                        <input type="hidden" name="action" value="search">
                     </div>
                 </form>
             </div>
