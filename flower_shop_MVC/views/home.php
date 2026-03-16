@@ -48,14 +48,11 @@
                         </h5>
                         <div class="product">
                             <img src="assets/images/hoa_hong.jpg" class="img-fluid img-banner-sale">
-
                             <h6>Hoa Hồng</h6>
-
                             <div class="price">
                                 <span class="new">120,000 đ</span>
                                 <span class="old">240,000 đ</span>
                             </div>
-
                             <div class="rating">
                                 ⭐ 5.0 (49)
                             </div>
