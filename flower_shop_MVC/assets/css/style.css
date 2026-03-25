@@ -168,3 +168,98 @@
 .carousel-item{
     transition: transform 1s ease-in-out;
 }
+/*Design login*/
+/* RESET */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* BACKGROUND LOGIN */
+.bg-login {
+    background: linear-gradient(135deg, #d8f3ec, #fefefe);
+}
+
+/* BACKGROUND REGISTER */
+.bg-register {
+    background: linear-gradient(135deg, #ffe0ec, #ffffff);
+}
+
+/* CONTAINER */
+.auth-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.auth-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    width: 380px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* TITLE */
+.auth-card h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* INPUT */
+.form-control {
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* BUTTON LOGIN */
+.btn-login {
+    background-color: #3a7d7c;
+    color: white;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #2f6665;
+}
+
+/* BUTTON REGISTER */
+.btn-register {
+    background-color: #ff6b81;
+    color: white;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.btn-register:hover {
+    background-color: #e85a70;
+}
+
+/* LINK */
+.link-login {
+    color: #3a7d7c;
+    text-decoration: none;
+}
+
+.link-register {
+    color: #ff6b81;
+    text-decoration: none;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

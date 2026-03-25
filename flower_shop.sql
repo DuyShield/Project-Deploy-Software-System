@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 11, 2026 at 12:28 PM
+-- Generation Time: Mar 25, 2026 at 02:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -22,6 +22,30 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `flower_shop` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `flower_shop`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `account`
+--
+
+DROP TABLE IF EXISTS `account`;
+CREATE TABLE `account` (
+  `id` int(11) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('user','admin') DEFAULT 'user',
+  `email` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `account`
+--
+
+INSERT INTO `account` (`id`, `username`, `password`, `role`, `email`) VALUES
+(1, 'admin', '$2y$10$X/C.vCzHZOzbyTPLMq7eJ.jPJ8bQhYPvECRLfDKmhQLcylolx0N1i', 'admin', 'admin123@gmail.com'),
+(2, 'user', 'user123', 'user', 'user123@gmail.com'),
+(3, 'DuyCoderS', '$2y$10$YI7L.Ta0G21etX9lUz4.oexZy1K5l8vtyZHeBKvZCiSdDwHiu4uiK', 'user', 'phuocduy565@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -58,6 +82,12 @@ INSERT INTO `products` (`id_product`, `name_product`, `description_product`, `pr
 --
 
 --
+-- Indexes for table `account`
+--
+ALTER TABLE `account`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
@@ -66,6 +96,12 @@ ALTER TABLE `products`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `account`
+--
+ALTER TABLE `account`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `products`

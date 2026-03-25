@@ -39,9 +39,7 @@
             </div>
 
         </div>
-
         <hr>
-
         <div class="text-center copyright">
             © 2026 Flower Cat-Shop | All Rights Reserved
         </div>

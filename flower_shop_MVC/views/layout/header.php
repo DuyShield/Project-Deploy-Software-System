@@ -2,13 +2,14 @@
 <html lang="en">
 
 <head>
-    <title>Bootstrap Example</title>
+    <title>Flower Cat Shop</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <link rel="icon" href="assets/images/logo2.png" type="image/icon">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
+<?php session_start(); ?>
 
 <body>
 
@@ -47,6 +48,19 @@
                         <input type="hidden" name="action" value="search">
                     </div>
                 </form>
+                <!-- Login / Register -->
+                <?php if (isset($_SESSION['user'])): ?>
+                    <span class="me-2 ms-2 px-3 py-1 border rounded-pill bg-light">
+                        Xin chào <?= $_SESSION['user']['username'] ?>
+                    </span>
+                    <?php if ($_SESSION['user']['role'] == 'admin'): ?>
+                        <a href="index.php?action=admin" class="btn btn-warning me-2">Quản trị</a>
+                    <?php endif; ?>
+                    <a href="index.php?action=logout" class="btn btn-danger">Logout</a>
+                <?php else: ?>
+                    <a href="index.php?action=login" class="btn btn-outline-success me-2 ms-2">Đăng nhập</a>
+                    <a href="index.php?action=register" class="btn btn-success">Đăng ký</a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
