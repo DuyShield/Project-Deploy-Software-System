@@ -2,9 +2,11 @@
 require_once "config/database.php";
 require_once "controllers/C_Product.php";
 require_once "controllers/C_User.php";
+
 $product = new C_Product();
 $user = new C_User();
 $action = isset($_GET['action']) ? $_GET['action'] : "home";
+
 switch ($action) {
     case "home":
         $product->home();
@@ -30,6 +32,21 @@ switch ($action) {
     case "logout":
         $user->logout();
         break;    
+    case "home_admin":
+        $product->home_admin();
+        break;
+    case "search_admin_home":
+        $product->search_admin_home();
+        break;
+    case "save_product":
+        $product->save_product();
+        break;
+    case "del_product":
+        $product->del_product();
+        break;
+    case "up_product":
+        $product->update_product();
+        break;
     default:
         echo "404 Not Found";
 }

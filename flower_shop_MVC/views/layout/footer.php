@@ -1,5 +1,3 @@
-</div>
-
 <footer class="flower-footer mt-5" style="border-top:1px green solid">
     <div class="container">
         <div class="row">
@@ -46,5 +44,7 @@
     </div>
 </footer>
 
+    <script src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/js/javascript.js"></script>
 </body>
 </html>

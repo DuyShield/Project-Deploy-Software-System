@@ -3,9 +3,9 @@
 <body>
     <?php if (!isset($isSearch)) { ?>
         <div class="container mt-4">
-            <div class="row">
+            <div class="row g-2 g-md-3">
                 <!-- Main Banner -->
-                <div class="col-md-6">
+                <div class="col-md-6 col-12">
                     <div id="bannerSlide" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <!-- Right Banner -->
-                <div class="col-md-3">
+                <div class="col-md-3 col-6">
                     <!-- Banner 1 -->
                     <div class="small-banner mb-3">
                         <img src="assets/images/banner1.jpg" class="img-fluid">
@@ -40,7 +40,7 @@
                         <img src="assets/images/banner2.jpg" class="img-fluid">
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3 col-6">
                     <!-- Flash sale -->
                     <div class="flash-sale baner-sale">
                         <h5 style="color:red;">FLASH SALE
@@ -70,11 +70,11 @@
                 echo "Danh sách hoa";
             } ?>
         </h2>
-        <div class="row">
+        <div class="row g-3">
             <?php if (!empty($products))
                 foreach ($products as $row) { ?>
-                    <div class="col-md-3">
-                        <div class="card mb-4 card-size-img">
+                    <div class="col-md-3 col-sm-6 col-12">
+                        <div class="card mb-4 card-size-img h-100">
                             <!--Logo card-->
                             <img src="assets/images/<?php echo $row['image']; ?>" class="card-img-top">
                             <!--Information product-->
@@ -83,7 +83,7 @@
                                 <p class="text-danger">
                                     <?php echo number_format($row['price_product']); ?> VNĐ
                                 </p>
-                                <a href="index.php?action=detail&id=<?php echo $row['id_product']; ?>" class="btn btn-primary">
+                                <a href="index.php?action=detail&id=<?php echo $row['id_product']; ?>" class="btn btn-primary w-100">
                                     Xem chi tiết
                                 </a>
                             </div>

@@ -1,15 +1,16 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>Flower Cat Shop</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="assets/images/logo2.png" type="image/icon">
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/logo2.png" type="image/icon">
+    <link href="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/css/style.css" rel="stylesheet">
+
 </head>
-<?php session_start(); ?>
 
 <body>
 
@@ -17,7 +18,7 @@
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="assets/images/logo2.png" class="logo me-2">
+                <img src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/logo2.png" class="logo me-2">
                 <span class="brand-name">Flower Cat-Shop</span>
             </a>
             <!-- Mobile button -->
@@ -39,7 +40,7 @@
                 </ul>
                 <!-- Search -->
                 <form class="d-flex" method="GET" action="index.php">
-                    <div class="search-box d-flex align-items-center">
+                    <div class="search-box d-flex align-items-center me-2">
                         <button type="button" class="btn btn-search me-2" onclick="toggleSearch()">
                             🔍
                         </button>
@@ -50,11 +51,12 @@
                 </form>
                 <!-- Login / Register -->
                 <?php if (isset($_SESSION['user'])): ?>
-                    <span class="me-2 ms-2 px-3 py-1 border rounded-pill bg-light">
-                        Xin chào <?= $_SESSION['user']['username'] ?>
-                    </span>
                     <?php if ($_SESSION['user']['role'] == 'admin'): ?>
-                        <a href="index.php?action=admin" class="btn btn-warning me-2">Quản trị</a>
+                        <a href="index.php?action=home_admin" class="btn btn-warning me-2">Xin chào <?= $_SESSION['user']['username'] ?></a>
+                    <?php else: ?>
+                        <span class="me-2 ms-2 px-3 py-1 border rounded-pill bg-light">
+                            Xin chào <?= $_SESSION['user']['username'] ?>
+                        </span>
                     <?php endif; ?>
                     <a href="index.php?action=logout" class="btn btn-danger">Logout</a>
                 <?php else: ?>
@@ -66,6 +68,7 @@
     </nav>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/javascript.js"></script>
+
 </body>
 
 </html>

@@ -12,12 +12,16 @@ class C_User
 
     public function login()
     {
+        include "views/layout/header.php";
         include "views/login.php";
+        include "views/layout/footer.php";
     }
 
     public function register()
     {
+        include "views/layout/header.php";
         include "views/register.php";
+        include "views/layout/footer.php";
     }
 
     //Xử lý đăng ký
@@ -40,13 +44,13 @@ class C_User
                 echo "Mật khẩu không khớp!";
                 return;
             }
-            if ($this->model->getUserByUsername($username)) {
+            if ($this->model->getAccountByName($username)) {
                 echo "Tên đăng nhập đã tồn tại!";
                 return;
             }
             //Mã hóa password
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-            $this->model->insertUser($username, $email, $hashPassword);
+            $this->model->insertAccount($username, $email, $hashPassword);
             header("Location: index.php?action=login");
             exit();
         }
@@ -62,32 +66,42 @@ class C_User
                 echo "Vui lòng nhập đầy đủ thông tin!";
                 return;
             }
-            $user = $this->model->getUserByUsername($username);
+            $user = $this->model->getAccountByName($username);
             if ($user && password_verify($password, $user['password'])) {
                 //Check session
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
                 }
-                //Tạo session
-                $_SESSION['user'] = $user;
-                header("Location: index.php?action=home");
-                exit();
-
+                //Check role user
+                $role = $this->model->getRoleByName($username);
+                if (trim($role['role']) === "admin") {
+                    //Tạo session
+                    $_SESSION['user'] = $user;
+                    header("Location: index.php?action=home_admin");
+                    exit();
+                } else {
+                    //Tạo session
+                    $_SESSION['user'] = $user;
+                    header("Location: index.php?action=home");
+                    exit();
+                }
             } else {
                 echo "Sai tài khoản hoặc mật khẩu!";
             }
         }
     }
     //Xử lý đăng xuất
-    public function logout() {
-    //Check session
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+    public function logout()
+    {
+        //Check session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        //Xóa session
+        session_unset();
+        session_destroy();
+        header("Location: index.php?action=login");
+        exit();
     }
-    //Xóa session
-    session_unset();
-    session_destroy();
-    header("Location: index.php?action=login");
-    exit();
-}
+
 }
