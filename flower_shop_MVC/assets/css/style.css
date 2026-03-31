@@ -269,7 +269,7 @@ body {
     }
 }
 
-/* Admin Home Styles */
+/*Admin Home*/
 .image_icon {
     width: 60px;
     height: 60px;
@@ -289,7 +289,7 @@ table td img {
 }
 
 .table-color {
-    background-color: #dcf2ff;
+    background-color: #e8fff4;
     color: #012f5f;
 }
 
@@ -328,7 +328,7 @@ table td img {
     box-shadow: 0 6px 18px rgba(36, 67, 126, .08);
 }
 
-/* Product Detail Styles */
+/*Product Detail*/
 .product-main-img {
     border-radius: 15px;
     transition: transform 0.3s ease;
@@ -386,4 +386,19 @@ table td img {
     background: #f1f3f4;
     border-radius: 8px;
     padding: 15px;
+}
+
+.btn-cart{
+    letter-spacing: 1px;
+}
+.img-cart{
+    width: 70px; 
+    height: 90px; 
+    object-fit: cover;
+}
+@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; 
+    }
 }

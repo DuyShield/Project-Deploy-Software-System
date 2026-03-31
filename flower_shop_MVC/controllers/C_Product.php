@@ -60,7 +60,7 @@ class C_Product
                 if (in_array($file_ext, $allowed_ext)) {
                     $new_image_name = uniqid() . "_" . time() . "." . $file_ext;
                     echo "Tên file mới: " . $new_image_name . "<br>"; // Debug
-                    $target = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/" . $new_image_name;
+                    $target = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_products/" . $new_image_name;
 
                     if (move_uploaded_file($tmp_name, $target)) {
                         $model = new M_Product();
@@ -86,7 +86,7 @@ class C_Product
             $product = $model->getProductById($id);
             if ($product) {
                 // Xóa file ảnh
-                $image_path = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/" . $product['image'];
+                $image_path = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_products/" . $product['image'];
                 if (file_exists($image_path)) {
                     unlink($image_path);
                 }
@@ -116,9 +116,9 @@ class C_Product
                 //Kiểm tra định dạng ảnh
                 if (in_array($file_ext, $allowed_ext)) {
                     $new_image_name = uniqid() . "_" . time() . "." . $file_ext;
-                    $target = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/" . $new_image_name;
+                    $target = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_products/" . $new_image_name;
                     if (move_uploaded_file($tmp_name, $target)) {
-                        $oldPath = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/" . $oldImage;
+                        $oldPath = $_SERVER['DOCUMENT_ROOT'] . "/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_products/" . $oldImage;
                         if (!empty($oldImage) && file_exists($oldPath)) {
                             unlink($oldPath);
                         }
@@ -140,4 +140,5 @@ class C_Product
             exit();
         }
     }
+    
 }

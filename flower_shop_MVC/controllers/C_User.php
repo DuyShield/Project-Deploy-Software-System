@@ -12,16 +12,12 @@ class C_User
 
     public function login()
     {
-        include "views/layout/header.php";
         include "views/login.php";
-        include "views/layout/footer.php";
     }
 
     public function register()
     {
-        include "views/layout/header.php";
         include "views/register.php";
-        include "views/layout/footer.php";
     }
 
     //Xử lý đăng ký

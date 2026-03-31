@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row gap-2">
 
-        <h2 class="title-section text-uppercase fw-bold text-primary mb-0">
+        <h2 class="title-section text-uppercase fw-bold mb-0">
             <?php if (isset($isSearch)) {
                 echo "Kết quả tìm kiếm cho: <b>$keyword</b>";
             } else {
@@ -48,7 +48,7 @@
                     foreach ($products as $row) { ?>
                         <tr>
                             <td><?php echo $row['id_product'] ?></td>
-                            <td><img src="assets/images/<?php echo $row['image'] ?>" class="rounded image_icon" alt="product">
+                            <td><img src="assets/images/image_products/<?php echo $row['image'] ?>" class="rounded image_icon" alt="product">
                             </td>
                             <td><strong><?php echo $row['name_product'] ?></strong></td>
                             <td><?php echo $row['name_category'] ?? $row['id_category'] ?></td>

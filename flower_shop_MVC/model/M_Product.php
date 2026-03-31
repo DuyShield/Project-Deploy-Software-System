@@ -56,4 +56,9 @@ class M_Product
             WHERE id_product=?";
         return $this->db->execute($sql, "ssdii", [$name, $desc, $price, $category, $id]);
     }
+    public function getProductsByCategory($id_category)
+    {
+        $sql = "SELECT * FROM products WHERE id_category = ?";
+        return $this->db->select($sql, "i", [$id_category]);
+    }
 }

@@ -2,9 +2,11 @@
 require_once "config/database.php";
 require_once "controllers/C_Product.php";
 require_once "controllers/C_User.php";
+require_once "controllers/C_Cart.php";
 
 $product = new C_Product();
 $user = new C_User();
+$cart = new C_Cart();
 $action = isset($_GET['action']) ? $_GET['action'] : "home";
 
 switch ($action) {
@@ -46,6 +48,15 @@ switch ($action) {
         break;
     case "up_product":
         $product->update_product();
+        break;
+    case "cart":
+        $cart->cart();
+        break;
+    case "add_to_cart": 
+        $cart->add_to_cart();
+        break;
+    case "update_cart":
+        $cart->update_cart();
         break;
     default:
         echo "404 Not Found";

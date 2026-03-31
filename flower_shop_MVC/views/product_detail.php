@@ -4,8 +4,8 @@
         <!--Main Picture-->
         <div class="col-md-5 col-12">
             <div class="product-img mb-4">
-                <img src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/<?php echo $product['image']; ?>"
-                     class="img-fluid rounded shadow-lg product-main-img" alt="Product Image">
+                <img src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_products/<?php echo $product['image']; ?>"
+                    class="img-fluid rounded shadow-lg product-main-img" alt="Product Image">
             </div>
         </div>
         <!--Detail Product-->
@@ -24,24 +24,33 @@
                     <?php echo $product['description_product']; ?>
                 </p>
             </div>
-            <!--Quantity-->
-            <div class="mb-4">
-                <label class="form-label fw-semibold">Số lượng:</label>
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-outline-secondary qty-btn" onclick="changeQty(-1)">-</button>
-                    <input type="number" id="quantity" value="1" min="1" class="form-control text-center qty-input" style="width: 80px;">
-                    <button class="btn btn-outline-secondary qty-btn" onclick="changeQty(1)">+</button>
+            <form action="index.php?action=add_to_cart" method="POST">
+                <input type="hidden" name="id_product" value="<?php echo $product['id_product']; ?>">
+                <input type="hidden" name="name_product" value="<?php echo $product['name_product']; ?>">
+                <input type="hidden" name="price_product" value="<?php echo $product['price_product']; ?>">
+                <input type="hidden" name="image" value="<?php echo $product['image']; ?>">
+                <!--Quantity-->
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Số lượng:</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-outline-secondary qty-btn" onclick="changeQty(-1)">-</button>
+                        <input type="number" name="quantity" value="1" min="1" class="form-control text-center qty-input"
+                            style="width: 80px;">
+                        <button class="btn btn-outline-secondary qty-btn" onclick="changeQty(1)">+</button>
+                    </div>
                 </div>
-            </div>
-            <!--Button-->
-            <div class="d-flex gap-3 mb-4">
-                <button class="btn btn-success btn-lg px-4 py-2 fw-semibold">
-                    <i class="bi bi-cart-plus me-2"></i>Add to Cart
-                </button>
-                <button class="btn btn-outline-danger btn-lg px-4 py-2 fw-semibold">
-                    <i class="bi bi-heart me-2"></i>Wishlist
-                </button>
-            </div>
+                <!--Button-->
+                <div class="d-flex gap-2 mb-4">
+                    <div class="d-flex gap-3 mb-4">
+                        <button class="btn btn-success btn-lg px-4 py-2 fw-semibold">
+                            <i class="bi bi-cart-plus me-2"></i>Add to Cart
+                        </button>
+                        <button class="btn btn-outline-danger btn-lg px-4 py-2 fw-semibold">
+                            <i class="bi bi-heart me-2"></i>Wishlist
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
