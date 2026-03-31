@@ -62,18 +62,41 @@ class C_Cart
 
         }
     }
+    public function remove_from_cart()
+    {
+        $id = $_GET['id'] ?? null;
+        if ($id) {
+            if (isset($_SESSION['user'])) {
+                $modelCart = new M_Cart();
+                $modelCart->removeFromCartDB($_SESSION['user']['id'], $id);
+            } else {
+                unset($_SESSION['cart'][$id]);
+            }
+        }
+        header("Location: index.php?action=cart");
+        exit();
+    }
+
     public function update_cart()
     {
         $id = $_GET['id'] ?? null;
         $op = $_GET['op'] ?? null;
-        if ($id && isset($_SESSION['cart'][$id])) {
-            if ($op === 'inc') {
-                $_SESSION['cart'][$id]['quantity'] += 1;
-            } elseif ($op === 'dec') {
-                $_SESSION['cart'][$id]['quantity'] -= 1;
-                // Nếu giảm xuống 0 thì xóa luôn sản phẩm
-                if ($_SESSION['cart'][$id]['quantity'] < 1) {
-                    unset($_SESSION['cart'][$id]);
+
+        if ($id && $op) {
+            if (isset($_SESSION['user'])) {
+                //Cập nhật DB
+                $modelCart = new M_Cart();
+                $modelCart->updateQuantityDB($_SESSION['user']['id'], $id, $op);
+            } else {
+                //Cập nhật Session
+                if (isset($_SESSION['cart'][$id])) {
+                    if ($op === 'inc') {
+                        $_SESSION['cart'][$id]['quantity']++;
+                    } elseif ($op === 'dec') {
+                        $_SESSION['cart'][$id]['quantity']--;
+                        if ($_SESSION['cart'][$id]['quantity'] < 1)
+                            unset($_SESSION['cart'][$id]);
+                    }
                 }
             }
         }

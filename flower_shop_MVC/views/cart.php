@@ -1,9 +1,4 @@
 <?php require "views/layout/header.php";
-/**
- * QUAN TRỌNG: 
- * Biến $cartItems và $total ĐÃ ĐƯỢC C_Cart tính toán và truyền xuống.
- * Không được khai báo lại $cartItems = $_SESSION['cart'] ở đây vì nó sẽ ghi đè dữ liệu từ Database.
- */
 ?>
 
 <div class="container my-5">
@@ -28,7 +23,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($cartItems as $id => $item): 
-                                // Xác định ID sản phẩm tùy theo nguồn dữ liệu (DB hoặc Session)
+                                //Xác định ID sản phẩm
                                 $productId = $item['id_product'] ?? $id; 
                             ?>
                                 <tr>

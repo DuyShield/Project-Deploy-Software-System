@@ -37,4 +37,37 @@ class M_Cart
             return $this->db->execute($sql, "iii", [$id_account, $id_product, $quantity]);
         }
     }
+    public function removeFromCartDB($id_account, $id_product)
+    {
+        $sql = "DELETE FROM cart WHERE id_account = ? AND id_product = ?";
+        return $this->db->execute($sql, "ii", [$id_account, $id_product]);
+    }
+
+    // Tăng hoặc giảm số lượng trong DB
+    public function updateQuantityDB($id_account, $id_product, $op)
+    {
+        // Lấy số lượng hiện tại
+        $sql = "SELECT id_cart, quantity FROM cart WHERE id_account = ? AND id_product = ?";
+        $result = $this->db->select($sql, "ii", [$id_account, $id_product]);
+
+        if (!empty($result)) {
+            $current_qty = $result[0]['quantity'];
+            $id_cart = $result[0]['id_cart'];
+
+            if ($op === 'inc') {
+                $new_qty = $current_qty + 1;
+            } else {
+                $new_qty = $current_qty - 1;
+            }
+
+            if ($new_qty > 0) {
+                $sql = "UPDATE cart SET quantity = ? WHERE id_cart = ?";
+                return $this->db->execute($sql, "ii", [$new_qty, $id_cart]);
+            } else {
+                // Nếu giảm xuống 0 thì xóa luôn
+                $sql = "DELETE FROM cart WHERE id_cart = ?";
+                return $this->db->execute($sql, "i", [$id_cart]);
+            }
+        }
+    }
 }

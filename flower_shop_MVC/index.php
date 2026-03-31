@@ -58,6 +58,9 @@ switch ($action) {
     case "update_cart":
         $cart->update_cart();
         break;
+    case 'remove_from_cart':
+        $cart->remove_from_cart();
+        break;
     default:
         echo "404 Not Found";
 }
