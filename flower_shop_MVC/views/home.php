@@ -1,7 +1,7 @@
 <?php require "views/layout/header.php"; ?>
 
 <body>
-    <?php if (!isset($isSearch)) { ?>
+    <?php if (!isset($isSearch) && empty($hideBanner)) { ?>
         <div class="container mt-4">
             <div class="row g-2 g-md-3">
                 <!-- Main Banner -->

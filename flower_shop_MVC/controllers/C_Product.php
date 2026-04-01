@@ -10,6 +10,13 @@ class C_Product
         $products = $model->getAllProducts();
         include "views/home.php";
     }
+    public function home_product()
+    {
+        $model = new M_Product();
+        $products = $model->getAllProducts();
+        $hideBanner = true;
+        include "views/home.php";
+    }
 
     public function detail()
     {
@@ -26,21 +33,21 @@ class C_Product
         $isSearch = true;
         include "views/home.php";
     }
-    public function home_admin()
+    public function product_management()
     {
         $model = new M_Product();
         $products = $model->getAllProducts();
         $categoryModel = new M_Category();
         $categories = $categoryModel->getAllCategories();
-        include "views/admin_home.php";
+        include "views/product_management.php";
     }
-    public function search_admin_home()
+    public function search_product_management()
     {
         $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : "";
         $model = new M_Product();
         $products = $model->searchProducts($keyword);
         $isSearch = true;
-        include "views/admin_home.php";
+        include "views/product_management.php";
     }
     public function save_product()
     {
@@ -65,7 +72,7 @@ class C_Product
                     if (move_uploaded_file($tmp_name, $target)) {
                         $model = new M_Product();
                         $model->addProduct($name, $description, $price, $new_image_name, $category);
-                        header("Location: index.php?action=home_admin");
+                        header("Location: index.php?action=product_management");
                         exit();
                     } else {
                         echo "Lỗi upload ảnh! Kiểm tra quyền thư mục.";
@@ -92,7 +99,7 @@ class C_Product
                 }
                 $model->deleteProduct($id);
             }
-            header("Location: index.php?action=home_admin");
+            header("Location: index.php?action=product_management");
         }
     }
     public function update_product()
@@ -136,7 +143,7 @@ class C_Product
                 //Update sản phẩm khi không có thêm ảnh mới
                 $model->updateProductNoImage($id, $name, $description, $price, $category);
             }
-            header("Location: index.php?action=home_admin");
+            header("Location: index.php?action=product_management");
             exit();
         }
     }

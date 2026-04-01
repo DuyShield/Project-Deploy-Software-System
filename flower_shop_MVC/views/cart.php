@@ -72,7 +72,7 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="p-4 bg-light border sticky-top" style="top: 20px;">
+                <div class="p-4 bg-light border" style="top: 90px;">
                     <h5 class="fw-bold mb-4 text-uppercase">Thông tin đơn hàng</h5>
                     <div class="d-flex justify-content-between mb-2">
                         <span>Tạm tính</span>

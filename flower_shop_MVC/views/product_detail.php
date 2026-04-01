@@ -33,10 +33,10 @@
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Số lượng:</label>
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn btn-outline-secondary qty-btn" onclick="changeQty(-1)">-</button>
+                        <button type="button" class="btn btn-outline-secondary qty-btn" onclick="changeQty(-1)">-</button>
                         <input type="number" name="quantity" value="1" min="1" class="form-control text-center qty-input"
                             style="width: 80px;">
-                        <button class="btn btn-outline-secondary qty-btn" onclick="changeQty(1)">+</button>
+                        <button type="button" class="btn btn-outline-secondary qty-btn" onclick="changeQty(1)">+</button>
                     </div>
                 </div>
                 <!--Button-->

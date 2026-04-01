@@ -47,7 +47,7 @@
 }
 
 /*Reponsive mobile cho search bar*/
-@media (max-width:576px) {
+@media (max-width:990px) {
     .search-box {
         width: 100%;
         margin-top: 10px;
@@ -56,6 +56,18 @@
     #searchInput {
         display: block !important;
         max-width: 100%;
+    }
+
+    .btn-cart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .d-flex.align-items-center.justify-content-end {
+        justify-content: space-between !important;
+        width: 100%;
+        margin-top: 10px;
     }
 }
 
@@ -184,7 +196,7 @@
     transition: transform 1s ease-in-out;
 }
 
-/*Design login*/
+/*Design cho login + register*/
 body {
     margin: 0;
     padding: 0;
@@ -243,10 +255,6 @@ body {
     transition: 0.3s;
 }
 
-.btn-register:hover {
-    background-color: #e85a70;
-}
-
 .link-login {
     color: #3a7d7c;
     text-decoration: none;
@@ -269,7 +277,7 @@ body {
     }
 }
 
-/*Admin Home*/
+/*Design cho Admin Home*/
 .image_icon {
     width: 60px;
     height: 60px;
@@ -328,7 +336,7 @@ table td img {
     box-shadow: 0 6px 18px rgba(36, 67, 126, .08);
 }
 
-/*Product Detail*/
+/*Design cho Product Detail*/
 .product-main-img {
     border-radius: 15px;
     transition: transform 0.3s ease;
@@ -388,17 +396,47 @@ table td img {
     padding: 15px;
 }
 
-.btn-cart{
+/*Design cho cart*/
+.btn-cart {
     letter-spacing: 1px;
 }
-.img-cart{
-    width: 70px; 
-    height: 90px; 
+
+.img-cart {
+    width: 70px;
+    height: 90px;
     object-fit: cover;
 }
-@media (min-width: 992px) {
-    .dropdown:hover .dropdown-menu {
-        display: block;
-        margin-top: 0; 
-    }
+
+/*Design cho trang contact*/
+.contact-card:hover {
+    transform: translateY(-5px);
+    transition: 0.3s;
+}
+
+.message_success {
+    color: green;
+    background: #e8f5e9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.message_failed {
+    color: red;
+    background: #ffebee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.card {
+    transition: 0.2s;
+}
+
+.card:hover {
+    background-color: #f1f9f2 !important;
+}
+
+.btn-sm {
+    font-size: 0.8rem;
 }

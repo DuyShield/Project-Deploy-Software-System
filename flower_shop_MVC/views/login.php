@@ -19,9 +19,17 @@
                 <div class="mb-3">
                     <input type="password" name="password" class="form-control" placeholder="Mật khẩu">
                 </div>
+                <!-- Remember me -->
+                <div class="form-check mb-3 text-start">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                    <label class="form-check-label" for="remember">
+                        Ghi nhớ đăng nhập
+                    </label>
+                </div>
                 <button class="btn btn-login w-100 rounded-pill">Đăng nhập</button>
                 <p class="text-center mt-3">
-                    <a href="/Project_Alpha_FlowerShop/FLOWER_SHOP_MVC/index.php" class="btn btn-secondary w-100 rounded-pill">
+                    <a href="/Project_Alpha_FlowerShop/FLOWER_SHOP_MVC/index.php"
+                        class="btn btn-secondary w-100 rounded-pill">
                         ← Quay lại trang chủ
                     </a>
                 </p>

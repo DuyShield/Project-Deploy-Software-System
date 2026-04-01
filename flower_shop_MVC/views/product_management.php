@@ -19,7 +19,7 @@
         <div class="card-body">
             <form class="row g-2 g-sm-3" method="GET" action="index.php">
                 <div class="col-12 col-sm-10">
-                    <input type="hidden" name="action" value="search_admin_home">
+                    <input type="hidden" name="action" value="search_product_management">
                     <input type="text" name="keyword" class="form-control" placeholder="Nhập tên sản phẩm cần tìm...">
                 </div>
                 <div class="col-12 col-sm-2">

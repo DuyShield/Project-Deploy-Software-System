@@ -36,16 +36,16 @@ if (session_status() === PHP_SESSION_NONE) {
                         <a class="nav-link active" href="index.php">Trang chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Sản phẩm</a>
+                        <a class="nav-link" href="index.php?action=product">Sản phẩm</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Liên hệ</a>
+                        <a class="nav-link" href="index.php?action=contact">Liên hệ</a>
                     </li>
                 </ul>
                 <!-- Search -->
                 <form class="d-flex" method="GET" action="index.php">
                     <div class="search-box d-flex align-items-center me-2">
-                        <button type="button" class="btn btn-search me-2" onclick="toggleSearch()">
+                        <button type="button" class="btn btn-search me-2" onclick="toggleSearch();">
                             <img src="assets/images/image_logos/search-interface-symbol.png" alt="logo">
                         </button>
                         <input type="text" id="searchInput" class="form-control" placeholder="Search flower..."
@@ -53,19 +53,36 @@ if (session_status() === PHP_SESSION_NONE) {
                         <input type="hidden" name="action" value="search">
                     </div>
                 </form>
-                <!-- Login / Register -->
-                <div class="d-flex align-items-center justify-content-end">
+                <!--Login / Register-->
+                <div class="d-flex align-items-center justify-content-end flex-wrap gap-2">
                     <?php if (isset($_SESSION['user'])): ?>
                         <div class="dropdown me-3">
                             <a class="nav-link dropdown-toggle fw-bold text-dark p-0" href="#" role="button"
                                 id="userMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 Xin chào <?= $_SESSION['user']['username'] ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userMenuLink">
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                                 <?php if ($_SESSION['user']['role'] == 'admin'): ?>
                                     <li>
-                                        <a class="dropdown-item py-2" href="index.php?action=home_admin">
+                                        <a class="dropdown-item py-2" href="index.php?action=product_management">
                                             Quản lý sản phẩm
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2" href="index.php?action=contact_list">
+                                            Quản lý liên hệ
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                <?php elseif ($_SESSION['user']['role'] == 'user'): ?>
+                                    <li>
+                                        <a class="dropdown-item py-2" href="index.php?action=contact_detail">
+                                            Lịch sử liên hệ
                                         </a>
                                     </li>
                                     <li>
@@ -80,17 +97,23 @@ if (session_status() === PHP_SESSION_NONE) {
                             </ul>
                         </div>
                     <?php else: ?>
-                        <a href="index.php?action=login" class="btn btn-outline-warning me-2 ms-2">Đăng nhập</a>
+                        <a href="index.php?action=login" class="btn btn-outline-success me-2 ms-2">
+                            Đăng nhập
+                        </a>
                     <?php endif; ?>
-                    <a href="index.php?action=cart" class="btn btn-outline-success btn-cart border-0">
-                        <img src="assets/images/image_logos/shopping-bag.png" alt="Cart" style="width: 24px;">
+                    <!--Cart-->
+                    <a href="index.php?action=cart" class="btn btn-outline-success btn-cart border-0 ms-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000"
+                            viewBox="0 0 256 256">
+                            <path
+                                d="M236.78,68.37A6,6,0,0,0,232,66H55.67L45.78,30.39A6,6,0,0,0,40,26H16a6,6,0,0,0,0,12H35.44L71,165.89A22.08,22.08,0,0,0,92.16,182H191a22.08,22.08,0,0,0,21.2-16.11l25.63-92.28A6,6,0,0,0,236.78,68.37Zm-36.2,94.31A10,10,0,0,1,191,170H92.16a10,10,0,0,1-9.63-7.32L59,78H224.11ZM102,216a14,14,0,1,1-14-14A14,14,0,0,1,102,216Zm104,0a14,14,0,1,1-14-14A14,14,0,0,1,206,216Z">
+                            </path>
+                        </svg>
                     </a>
                 </div>
             </div>
         </div>
     </nav>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/javascript.js"></script>
 </body>
 
 </html>

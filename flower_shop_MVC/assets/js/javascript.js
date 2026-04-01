@@ -25,11 +25,12 @@
 
     setInterval(updateCountdown, 1000);
     //Số lượng sản phẩm
-    function changeQty(delta) {
-        const qtyInput = document.getElementById('quantity');
-        let qty = parseInt(qtyInput.value) + delta;
-        if (qty < 1) qty = 1;
-        qtyInput.value = qty;
+    function changeQty(amount) {
+        let input = document.querySelector('.qty-input');
+        let value = parseInt(input.value) || 1;
+        value += amount;
+        if (value < 1) value = 1;
+        input.value = value;
     }
     //Modal xóa sản phẩm
     function openDeleteModal(id, name) {
