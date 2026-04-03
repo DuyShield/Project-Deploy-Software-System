@@ -46,7 +46,7 @@
         document.getElementById("edit_price").value = price;
         document.getElementById("edit_description").value = description;
         //Hiển thị ảnh cũ
-        document.getElementById("old_image").src = "assets/images/" + image;
+        document.getElementById("old_image").src = "assets/images/image_products/" + image;
         // reset preview
         document.getElementById("preview_image").classList.add("d-none");
     }

@@ -67,29 +67,29 @@ class C_User
     public function login_submit()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            //Gọi session
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
             $username = trim($_POST['username']);
             $password = $_POST['password'];
             if (empty($username) || empty($password)) {
-                echo "Vui lòng nhập đầy đủ thông tin!";
-                return;
+                $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
+                header("Location: index.php?action=login"); // Quay lại trang login
+                exit();
             }
             $user = $this->model->getAccountByName($username);
             if ($user && password_verify($password, $user['password'])) {
-                //Check role user
-                $role = $this->model->getRoleByName($username);
-                //lưu session
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['role'] = $role['role'];
+                // Lấy role
+                $roleData = $this->model->getRoleByName($username);
+                $role = ($roleData) ? trim($roleData['role']) : 'user';
+                // Lưu Session chính
+                $_SESSION['user'] = $user;
+                $_SESSION['role'] = $role;
+                // Xử lý Remember Me
                 if (isset($_POST['remember'])) {
                     $token = bin2hex(random_bytes(32));
-                    $expire = (new DateTime('+7 days'))->format('Y-m-d H:i:s');
-                    //lưu DB
-                    $this->model->saveRememberToken($user['id'], $token, $expire);
-                    //cookie
+                    $expire_db = (new DateTime('+7 days'))->format('Y-m-d H:i:s');
+                    $this->model->saveRememberToken($user['id'], $token, $expire_db);
                     setcookie("remember_token", $token, [
                         'expires' => time() + (86400 * 7),
                         'path' => '/',
@@ -97,19 +97,17 @@ class C_User
                         'samesite' => 'Strict'
                     ]);
                 }
-                if (trim($role['role']) === "admin") {
-                    //Tạo session
-                    $_SESSION['user'] = $user;
+                // Chuyển hướng theo Role
+                if ($role === "admin") {
                     header("Location: index.php?action=product_management");
-                    exit();
                 } else {
-                    //Tạo session
-                    $_SESSION['user'] = $user;
                     header("Location: index.php?action=home");
-                    exit();
                 }
+                exit();
             } else {
-                echo "Sai tài khoản hoặc mật khẩu!";
+                $_SESSION['error'] = "Sai tài khoản hoặc mật khẩu!";
+                header("Location: index.php?action=login");
+                exit();
             }
         }
     }
@@ -190,14 +188,15 @@ class C_User
         }
     }
     //Xử lý lưu dữ liệu trả lời
-    public function send_reply() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $id = $_POST['id'];
-        $reply = $_POST['reply'];
-        if ($this->model->updateReply($id, $reply)) {
-            header("Location: index.php?action=contact_list&status=success");
-            exit();
+    public function send_reply()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $reply = $_POST['reply'];
+            if ($this->model->updateReply($id, $reply)) {
+                header("Location: index.php?action=contact_list&status=success");
+                exit();
+            }
         }
     }
-}
 }

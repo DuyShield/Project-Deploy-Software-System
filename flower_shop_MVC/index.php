@@ -8,17 +8,6 @@ $product = new C_Product();
 $user = new C_User();
 $cart = new C_Cart();
 
-if (!isset($_SESSION['role']) && isset($_COOKIE['remember_token'])) {
-    $token = $_COOKIE['remember_token'];
-
-    $userToken = $this->model->getUserByToken($token);
-
-    if ($userToken) {
-        $_SESSION['user_id'] = $userToken['id'];
-        $_SESSION['role'] = $userToken['role'];
-    }
-}
-
 $action = isset($_GET['action']) ? $_GET['action'] : "home";
 
 switch ($action) {
