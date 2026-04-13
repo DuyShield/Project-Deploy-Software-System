@@ -1,11 +1,23 @@
 <?php require "views/layout/header.php"; ?>
+<div id="notification-container">
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert-box success">
+            <i class="fas fa-check-circle"></i>
+            <span><?= $_SESSION['success']; unset($_SESSION['success']); ?></span>
+        </div>
+    <?php endif; ?>
 
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert-box error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><?= $_SESSION['error']; unset($_SESSION['error']); ?></span>
+        </div>
+    <?php endif; ?>
+</div>
 <div class="container my-5">
-    <h3 class="text-success fw-bold mb-4">Hòm thư khách hàng</h3>
-
+    <h3 class="fw-bold mb-4">HÒM THƯ KHÁCH HÀNG</h3>
     <?php if (!empty($contacts)): ?>
-        <?php foreach ($contacts as $c): ?>
-            
+        <?php foreach ($contacts as $c): ?>      
             <div class="card mb-3 border-0 shadow-sm" style="background-color: #f9fdfa; border-radius: 12px;">
                 <div class="card-body">
                     <div class="row align-items-center">
@@ -18,8 +30,7 @@
                         </div>
 
                         <div class="col-md-7 px-4">
-                            <p class="mb-2"><strong>Khách viết:</strong> <?= nl2br($c['message']) ?></p>
-                            
+                            <p class="mb-2"><strong>Khách viết:</strong> <?= nl2br($c['message']) ?></p>                           
                             <?php if (!empty($c['reply'])): ?>
                                 <div class="mt-2 p-2 rounded-3" style="background-color: #eef7ee;">
                                     <p class="text-success mb-0 small">
@@ -45,7 +56,7 @@
                     </div>
                 </div>
             </div>
-
+            <!--Modal phản hồi-->
             <div class="modal fade" id="replyModal<?= $c['id'] ?>" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
@@ -71,7 +82,7 @@
                     </div>
                 </div>
             </div>
-
+            <!--Modal xóa liên hệ-->
             <div class="modal fade" id="delModal<?= $c['id'] ?>" tabindex="-1">
                 <div class="modal-dialog modal-sm modal-dialog-centered">
                     <div class="modal-content border-0 shadow" style="border-radius: 15px;">

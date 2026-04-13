@@ -3,9 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Đăng nhập - Flower Cat Shop</title>
-    <link href="/Project_Alpha_FlowerShop/FLOWER_SHOP_MVC/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/Project_Alpha_FlowerShop/FLOWER_SHOP_MVC/assets/css/style.css" rel="stylesheet">
+    <title>Đăng ký - Flower Cat Shop</title>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
 
 <body class="bg-register">
@@ -27,7 +27,7 @@
                 </div>
                 <button class="btn btn-register w-100 rounded-pill">Đăng ký</button>
                 <p class="text-center mt-3">
-                    <a href="/Project_Alpha_FlowerShop/FLOWER_SHOP_MVC/index.php" class="btn btn-secondary w-100 rounded-pill">
+                    <a href="index.php" class="btn btn-secondary w-100 rounded-pill">
                         ← Quay lại trang chủ
                     </a>
                 </p>

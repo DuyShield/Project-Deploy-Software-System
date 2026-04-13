@@ -4,7 +4,7 @@
         <!--Main Picture-->
         <div class="col-md-5 col-12">
             <div class="product-img mb-4">
-                <img src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_products/<?php echo $product['image']; ?>"
+                <img src="assets/images/image_products/<?php echo $product['image']; ?>"
                     class="img-fluid rounded shadow-lg product-main-img" alt="Product Image">
             </div>
         </div>

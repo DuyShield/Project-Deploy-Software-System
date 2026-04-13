@@ -9,27 +9,20 @@ class C_User
     {
         $this->model = new M_User();
     }
-
+    //Hiển thị trang đăng nhập
     public function login()
     {
         include "views/login.php";
     }
-
+    //Hiển thị trang đăng ký
     public function register()
     {
         include "views/register.php";
     }
+    //Hiển thị trang liên hệ
     public function contact()
     {
         include "views/contact.php";
-    }
-    public function contact_list()
-    {
-        $contacts = $this->model->getAllContacts();
-        if ($contacts === null) {
-            $contacts = [];
-        }
-        include "views/contact_list.php";
     }
     //Xử lý đăng ký
     public function register_submit()
@@ -135,16 +128,16 @@ class C_User
         if (session_status() === PHP_SESSION_NONE)
             session_start();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Lấy User ID từ session
+            //Lấy User ID từ session
             $user_id = $_SESSION['user']['id'] ?? null;
 
             $name = trim($_POST['name'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $message = trim($_POST['message'] ?? '');
-            // Kiểm tra trống
+            //Kiểm tra trống
             if (empty($name) || empty($email) || empty($message)) {
                 $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
-                header("Location: index.php?action=contact"); // Trở về trang gửi liên hệ
+                header("Location: index.php?action=contact");
                 exit();
             }
             // Kiểm tra định dạng email
@@ -157,7 +150,7 @@ class C_User
             $result = $this->model->saveContact($user_id, $name, $email, $message);
             if ($result) {
                 $_SESSION['success'] = "Tin nhắn của bạn đã được gửi thành công!";
-                header("Location: index.php?action=contact_detail&id=" . ($user_id ?? ''));
+                header("Location: index.php?action=contact&id=" . ($user_id ?? ''));
             } else {
                 $_SESSION['error'] = "Có lỗi xảy ra, vui lòng thử lại sau.";
                 header("Location: index.php?action=contact");
@@ -165,6 +158,7 @@ class C_User
             exit();
         }
     }
+    //Hiển thị chi tiết liên hệ
     public function contact_detail($user_id)
     {
         if (!$user_id) {
@@ -174,29 +168,44 @@ class C_User
         $contacts = $this->model->getContactsByUserId($user_id);
         include "views/contact_detail.php";
     }
-    public function delete()
+    //Hiển thị lịch sử đơn hàng
+    public function my_orders()
     {
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
-            $result = $this->model->deleteContact($id);
-            if ($result) {
-                header("Location: index.php?action=contact_list&status=deleted");
-                exit();
-            } else {
-                echo "Có lỗi xảy ra khi xóa!";
-            }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
+
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login&error=denied");
+            exit();
+        }
+
+        $user_id = $_SESSION['user']['id'];
+
+        require_once "model/M_Cart.php";
+        $cartModel = new M_Cart();
+        $orders = $cartModel->getOrdersByUser($user_id);
+
+        include "views/my_orders.php";
     }
-    //Xử lý lưu dữ liệu trả lời
-    public function send_reply()
+    //Hiển thị chi tiết đơn hàng
+    public function order_detail()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id'];
-            $reply = $_POST['reply'];
-            if ($this->model->updateReply($id, $reply)) {
-                header("Location: index.php?action=contact_list&status=success");
-                exit();
-            }
+        if (!isset($_GET['id'])) {
+            header("Location: index.php?action=my_orders");
+            exit();
         }
+
+        $id_order = $_GET['id'];
+        $cartModel = new M_Cart();
+
+        $order = $cartModel->getOrderById($id_order);
+
+        if (!$order || $order['id_account'] != $_SESSION['user']['id']) {
+            die("Bạn không có quyền xem đơn hàng này!");
+        }
+
+        $items = $cartModel->getOrderItems($id_order);
+        include "views/order_detail.php";
     }
 }

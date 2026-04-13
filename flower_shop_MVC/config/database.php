@@ -5,7 +5,7 @@
         private $host = "localhost";
         private $user = "root";
         private $pass = "";
-        private $dbname = "flower_shop";
+        private $dbname = "flowershop";
         private $conn;
 
         public function __construct(){
@@ -47,18 +47,6 @@
             }
             $stmt->close();
             return $success;
-        }
-
-        public function count($sql, $types = "", $params = []){
-            $stmt = $this->conn->prepare($sql);
-            if (!empty($params)) {
-                $stmt->bind_param($types, ...$params);
-            }
-            $stmt->execute();
-            $stmt->bind_result($total);
-            $stmt->fetch();
-            $stmt->close();
-            return $total ?? 0;
         }
 
         public function close()

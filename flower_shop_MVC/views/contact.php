@@ -1,19 +1,19 @@
-<?php require "views/layout/header.php";
-if (isset($_SESSION['success'])): ?>
-    <div class="message_success">
-        <?= $_SESSION['success'];
-        unset($_SESSION['success']); ?>
-    </div>
-<?php endif; ?>
+<?php require "views/layout/header.php"; ?>
+<div id="notification-container">
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert-box success">
+            <i class="fas fa-check-circle"></i>
+            <span><?= $_SESSION['success']; unset($_SESSION['success']); ?></span>
+        </div>
+    <?php endif; ?>
 
-<?php if (isset($_SESSION['error'])): ?>
-    <div class="message_failed">
-        <?= $_SESSION['error'];
-        unset($_SESSION['error']); ?>
-    </div>
-<?php endif;
-?>
-
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert-box error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><?= $_SESSION['error']; unset($_SESSION['error']); ?></span>
+        </div>
+    <?php endif; ?>
+</div>
 <div class="container mt-5 mb-5">
     <div class="row g-4">
         <!--Thông tin liên hệ-->

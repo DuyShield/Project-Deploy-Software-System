@@ -10,10 +10,9 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>Flower Cat Shop</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_logos/logo2.png"
-        type="image/icon">
-    <link href="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/css/style.css" rel="stylesheet">
+    <link rel="icon" href="assets/images/image_logos/logo2.png" type="image/icon">
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,8 +20,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="/Project_Alpha_FlowerShop/flower_shop_MVC/assets/images/image_logos/logo2.png"
-                    class="logo me-2">
+                <img src="assets/images/image_logos/logo2.png" class="logo me-2">
                 <span class="brand-name">Flower Cat-Shop</span>
             </a>
             <!-- Mobile button -->
@@ -61,37 +59,53 @@ if (session_status() === PHP_SESSION_NONE) {
                                 id="userMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 Xin chào <?= $_SESSION['user']['username'] ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 overflow-hidden">
                                 <?php if ($_SESSION['user']['role'] == 'admin'): ?>
                                     <li>
-                                        <a class="dropdown-item py-2" href="index.php?action=product_management">
-                                            Quản lý sản phẩm
+                                        <a class="dropdown-item py-2 d-flex align-items-center"
+                                            href="index.php?action=product_management">
+                                            <i class="bi bi-box-seam me-2 text-primary"></i>
+                                            <span>Quản lý sản phẩm</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item py-2" href="index.php?action=contact_list">
-                                            Quản lý liên hệ
+                                        <a class="dropdown-item py-2 d-flex align-items-center"
+                                            href="index.php?action=contact_list">
+                                            <i class="bi bi-chat-left-text me-2 text-primary"></i>
+                                            <span>Quản lý liên hệ</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                <?php elseif ($_SESSION['user']['role'] == 'user'): ?>
-                                    <li>
-                                        <a class="dropdown-item py-2" href="index.php?action=contact_detail">
-                                            Lịch sử liên hệ
+                                        <a class="dropdown-item py-2 d-flex align-items-center"
+                                            href="index.php?action=order_lists">
+                                            <i class="bi bi-cart-check me-2 text-primary"></i>
+                                            <span>Quản lý đơn đặt hàng</span>
                                         </a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
                                     </li>
                                 <?php endif; ?>
+                                    <li>
+                                        <a class="dropdown-item py-2 d-flex align-items-center"
+                                            href="index.php?action=contact_detail">
+                                            <i class="bi bi-clock-history me-2 text-success"></i>
+                                            <span>Lịch sử liên hệ</span>
+                                        </a>
+                                    </li>
+                                
                                 <li>
-                                    <a class="dropdown-item py-2 text-danger" href="index.php?action=logout">
-                                        Đăng xuất
+                                    <a class="dropdown-item py-2 d-flex align-items-center"
+                                        href="index.php?action=my_orders">
+                                        <i class="bi bi-cart-check me-2 text-primary"></i>
+                                        <span>Đơn đã đặt</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider mx-2">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item py-2 d-flex align-items-center text-danger"
+                                        href="index.php?action=logout">
+                                        <i class="bi bi-box-arrow-right me-2"></i>
+                                        <span>Đăng xuất</span>
                                     </a>
                                 </li>
                             </ul>

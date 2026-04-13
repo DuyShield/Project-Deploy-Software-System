@@ -8,6 +8,7 @@ class C_Cart
             session_start();
         }
     }
+    //
     public function cart()
     {
         $cartItems = [];
@@ -28,6 +29,7 @@ class C_Cart
         }
         include "views/cart.php";
     }
+    //Thêm sản phẩm vào giỏ hàng
     public function add_to_cart()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -62,6 +64,7 @@ class C_Cart
 
         }
     }
+    //Xóa sản phẩm khỏi giỏ hàng
     public function remove_from_cart()
     {
         $id = $_GET['id'] ?? null;
@@ -76,7 +79,7 @@ class C_Cart
         header("Location: index.php?action=cart");
         exit();
     }
-
+    //Cập nhật số lượng sản phẩm trong giỏ hàng
     public function update_cart()
     {
         $id = $_GET['id'] ?? null;
@@ -102,6 +105,59 @@ class C_Cart
         }
         header("Location: index.php?action=cart");
         exit();
+    }
+    //Xử lý thanh toán
+    function checkout()
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+        $cartItems = [];
+        $total = 0;
+
+        $id_account = $_SESSION['user']['id'];
+        $modelCart = new M_Cart();
+        $cartItems = $modelCart->getCartByAccount($id_account);
+
+        foreach ($cartItems as $item) {
+            $total += $item['price_product'] * $item['quantity'];
+        }
+        include "views/checkout.php";
+    }
+    //Xử lý lưu đơn hàng
+    function process_checkout()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id_account = $_SESSION['user']['id'];
+            $name = $_POST['name'];
+            $phone = $_POST['phone'];
+            $email = $_POST['email'];
+            $note = $_POST['note'];
+            $payment_method = $_POST['payment'];
+            $total_money = $_POST['total_price'];
+
+            $address = $_POST['address'];
+
+            $modelCart = new M_Cart();
+
+            $id_order = $modelCart->createOrder($id_account, $name, $phone, $email, $address, $note, $total_money, $payment_method);
+
+            $cartItems = $modelCart->getCartByAccount($id_account);
+            foreach ($cartItems as $item) {
+                $modelCart->createOrderDetail($id_order, $item['id_product'], $item['quantity'], $item['price_product']);
+            }
+
+            $modelCart->clearCart($id_account);
+
+            header("Location: index.php?action=order_success");
+            exit();
+        }
+    }
+    //Hiển thị trang thành công sau khi đặt hàng
+    public function order_success()
+    {
+        include "views/order_success.php";
     }
 }
 ?>

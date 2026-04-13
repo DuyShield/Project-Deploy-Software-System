@@ -46,7 +46,7 @@
     padding: 20px;
 }
 
-/*Reponsive mobile cho search bar*/
+/*Reponsive mobile*/
 @media (max-width:990px) {
     .search-box {
         width: 100%;
@@ -68,6 +68,9 @@
         justify-content: space-between !important;
         width: 100%;
         margin-top: 10px;
+    }
+    .checkout-wrapper {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -439,4 +442,172 @@ table td img {
 
 .btn-sm {
     font-size: 0.8rem;
+}
+/*Design cho trang checkout*/
+:root {
+    --primary-color: #2D2D2D;
+    --bg-light: #F9F9F9;
+    --border-color: #E0E0E0;
+    --accent-color: #E8F5E9; /* Màu xanh từ Header của bạn */
+}
+
+.checkout-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 40px;
+    padding: 40px;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.input-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.payment-card {
+    display: block;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.payment-card.active {
+    border-color: #4CAF50;
+    background-color: var(--accent-color);
+}
+
+.summary-box {
+    background: white;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+    border-radius: 8px;
+    position: sticky;
+    top: 20px;
+}
+
+.summary-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.product-mini .item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 20px 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 18px;
+    color: #D32F2F;
+    margin-top: 15px;
+}
+
+.btn-complete {
+    width: 100%;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-weight: bold;
+    margin-top: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-complete:hover {
+    background: #000;
+}
+
+.back-to-cart {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+}
+.group-hidden {
+    display: none; /* Ẩn hoàn toàn */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.group-show {
+    display: block !important;
+    opacity: 1;
+}
+/*Design cho notification*/
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.alert-box {
+    min-width: 250px;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+.success { background-color: #88fd9f; border-left: 5px solid #27ae60; }
+.error { background-color: #e74c3c; border-left: 5px solid #c0392b; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.fade-out {
+    animation: slideOut 0.5s ease-in forwards;
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
 }

@@ -1,9 +1,23 @@
 <?php require "views/layout/header.php"; ?>
+<div id="notification-container">
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert-box success">
+            <i class="fas fa-check-circle"></i>
+            <span><?= $_SESSION['success']; unset($_SESSION['success']); ?></span>
+        </div>
+    <?php endif; ?>
 
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert-box error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><?= $_SESSION['error']; unset($_SESSION['error']); ?></span>
+        </div>
+    <?php endif; ?>
+</div>
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row gap-2">
 
-        <h2 class="title-section text-uppercase fw-bold mb-0">
+        <h2 class="text-uppercase fw-bold mb-0">
             <?php if (isset($isSearch)) {
                 echo "Kết quả tìm kiếm cho: <b>$keyword</b>";
             } else {
@@ -102,8 +116,8 @@
                             <label class="form-label">Danh mục</label>
                             <select name="category" class="form-select">
                                 <?php if (!empty($categories))
-                                    foreach ($categories as $cat): ?>
-                                        <option value="<?php echo $cat['id_category']; ?>"><?php echo $cat['name_category']; ?>
+                                    foreach ($categories as $cate): ?>
+                                        <option value="<?php echo $cate['id_category']; ?>"><?php echo $cate['name_category']; ?>
                                         </option>
                                     <?php endforeach; ?>
                             </select>

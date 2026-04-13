@@ -3,6 +3,7 @@ require_once "config/database.php";
 require_once "controllers/C_Product.php";
 require_once "controllers/C_User.php";
 require_once "controllers/C_Cart.php";
+require_once "controllers/C_Admin.php";
 
 $product = new C_Product();
 $user = new C_User();
@@ -41,36 +42,12 @@ switch ($action) {
     case "logout":
         $user->logout();
         break;
-    case "product_management":
-        $product->product_management();
-        break;
-    case "search_product_management":
-        $product->search_product_management();
-        break;
-    case "save_product":
-        $product->save_product();
-        break;
-    case "del_product":
-        $product->del_product();
-        break;
-    case "up_product":
-        $product->update_product();
-        break;
     case "contact_submit":
         $user->contact_submit();
-        break;
-    case "contact_list":
-        $user->contact_list();
         break;
     case "contact_detail":
         $user_id = $_SESSION['user']['id'] ?? null;
         $user->contact_detail($user_id);
-        break;
-    case "send_reply":
-        $user->send_reply();
-        break;
-    case 'delete_contact':
-        $user->delete();
         break;
     case "cart":
         $cart->cart();
@@ -83,6 +60,56 @@ switch ($action) {
         break;
     case 'remove_from_cart':
         $cart->remove_from_cart();
+        break;
+    case "checkout":
+        $cart->checkout();
+        break;
+    case "process_checkout":
+        $cart->process_checkout();
+        break;
+    case "order_success":
+        $cart->order_success();
+        break;
+    case "my_orders":
+        $user->my_orders();
+        break;
+    case "order_detail":
+        $user->order_detail();
+        break;
+    case "product_management":
+    case "search_product_management":
+    case "save_product":
+    case "del_product":
+    case "up_product":
+    case "contact_list":
+    case "order_lists":
+    case "update_status":
+    case "delete_order":
+    case "send_reply":
+    case "delete_contact":
+        $admin = new C_Admin();
+        if ($action == "product_management")
+            $admin->product_management();
+        if ($action == "search_product_management")
+            $admin->search_product_management();
+        if ($action == "save_product")
+            $admin->save_product();
+        if ($action == "del_product")
+            $admin->del_product();
+        if ($action == "up_product")
+            $admin->update_product();
+        if ($action == "contact_list")
+            $admin->contact_list();
+        if ($action == "order_lists")
+            $admin->order_lists();
+        if ($action == "update_status")
+            $admin->update_status();
+        if ($action == "delete_order")
+            $admin->delete_order();
+        if ($action == "send_reply")
+            $admin->send_reply();
+        if ($action == "delete_contact")
+            $admin->delete_contact();
         break;
     default:
         echo "404 Not Found";

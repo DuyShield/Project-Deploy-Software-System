@@ -11,7 +11,6 @@
                     + Gửi liên hệ mới
                 </a>
             </div>
-
             <?php if (empty($contacts)): ?>
                 <div class="card shadow-sm border-0 text-center py-5">
                     <div class="card-body">
