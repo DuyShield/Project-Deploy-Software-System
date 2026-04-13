@@ -40,6 +40,18 @@
         document.getElementById('deleteProductName').textContent = name;
         new bootstrap.Modal(document.getElementById('modalDelete')).show();
     }
+    //Modal hủy đơn hàng
+    function openCancelModal(id) {
+        document.getElementById('cancelOrderId').textContent = '#' + id;
+        document.getElementById('cancelOrderIdInput').value = id;
+        new bootstrap.Modal(document.getElementById('modalCancel')).show();
+    }
+    //Modal xóa đơn hàng admin
+    function openDeleteOrderModal(id) {
+        document.getElementById('deleteOrderId').textContent = '#' + id;
+        document.getElementById('deleteOrderIdInput').value = id;
+        new bootstrap.Modal(document.getElementById('modalDeleteOrder')).show();
+    }
     //Upload dữ liệu sản phẩm
     function openEditModal(id, name, category, price, description, image) {
         document.getElementById("edit_id").value = id;

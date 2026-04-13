@@ -89,7 +89,7 @@
                                     </div>
 
                                     <button class="btn btn-sm btn-danger fw-bold px-3"
-                                        onclick="confirmDelete(<?= $row['id_order'] ?>)">
+                                        onclick="openDeleteOrderModal(<?= $row['id_order'] ?>)">
                                         Xóa
                                     </button>
                                 </div>
@@ -103,6 +103,27 @@
                 <?php endif; ?>
             </tbody>
         </table>
+    </div>
+</div>
+<!--Modal xóa đơn hàng-->
+<div class="modal fade" id="modalDeleteOrder" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="index.php?action=delete_order" method="POST">
+                <div class="modal-body">
+                    <p>Bạn có chắc muốn xóa đơn hàng: <strong id="deleteOrderId"></strong>?</p>
+                    <input type="hidden" name="id" id="deleteOrderIdInput">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <?php require "views/layout/footer.php"; ?>
