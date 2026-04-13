@@ -48,14 +48,10 @@
                                     </a>
 
                                     <?php if ($row['status'] == 0): ?>
-                                        <form action="index.php?action=update_status" method="POST" 
-                                              onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')">
-                                            <input type="hidden" name="id_order" value="<?= $row['id_order'] ?>">
-                                            <input type="hidden" name="status" value="3">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger fw-bold px-3">
-                                                Hủy
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-outline-danger fw-bold px-3"
+                                                onclick="openCancelModal(<?= $row['id_order'] ?>)">
+                                            Hủy
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </td>
@@ -71,6 +67,28 @@
                 <?php endif; ?>
             </tbody>
         </table>
+    </div>
+</div>
+<!--Modal hủy đơn hàng-->
+<div class="modal fade" id="modalCancel" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Xác nhận hủy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="index.php?action=update_status" method="POST">
+                <div class="modal-body">
+                    <p>Bạn có chắc muốn hủy đơn hàng: <strong id="cancelOrderId"></strong>?</p>
+                    <input type="hidden" name="id_order" id="cancelOrderIdInput">
+                    <input type="hidden" name="status" value="3">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <?php require "views/layout/footer.php"; ?>
