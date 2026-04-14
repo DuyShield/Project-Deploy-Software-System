@@ -8,13 +8,38 @@ class M_Cart
         $this->db = new Database();
     }
     //Lấy giỏ hàng
-    public function getCartByAccount($id_account)
+    public function getCartByAccount($id_account, $productIds = [])
     {
         $sql = "SELECT c.*, p.name_product, p.price_product, p.image 
                 FROM carts c 
                 JOIN products p ON c.id_product = p.id_product 
                 WHERE c.id_account = ?";
-        return $this->db->select($sql, "i", [$id_account]);
+        $params = [$id_account];
+        $types = "i";
+
+        if (!empty($productIds) && is_array($productIds)) {
+            $ids = array_map('intval', $productIds);
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $sql .= " AND c.id_product IN ($placeholders)";
+            $types .= str_repeat('i', count($ids));
+            $params = array_merge($params, $ids);
+        }
+
+        return $this->db->select($sql, $types, $params);
+    }
+
+    //Xóa nhiều sản phẩm khỏi giỏ hàng của người dùng
+    public function removeCartItems($id_account, $productIds)
+    {
+        if (empty($productIds) || !is_array($productIds)) {
+            return false;
+        }
+        $ids = array_map('intval', $productIds);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "DELETE FROM carts WHERE id_account = ? AND id_product IN ($placeholders)";
+        $types = 'i' . str_repeat('i', count($ids));
+        $params = array_merge([$id_account], $ids);
+        return $this->db->execute($sql, $types, $params);
     }
 
     //Thêm hoặc cập nhật số lượng

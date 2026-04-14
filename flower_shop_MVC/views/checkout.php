@@ -1,14 +1,19 @@
 <?php require "views/layout/header.php"; ?>
-<form action="index.php?action=process_checkout" method="POST">
+<form action="index.php?action=process_checkout" method="POST" onsubmit="return validateCheckout()">
     <div class="checkout-wrapper">
         <div class="checkout-form">
             <h2 class="section-title">THÔNG TIN GIAO HÀNG</h2>
+            <?php if (!empty($_SESSION['checkout_error'])): ?>
+                <div class="form-error" style="color: #d9534f; margin-bottom: 1rem;">
+                    <?php echo $_SESSION['checkout_error']; unset($_SESSION['checkout_error']); ?>
+                </div>
+            <?php endif; ?>
             <div class="form-group">
-                <input type="text" name="name" placeholder="Họ và tên người nhận" class="input-control">
+                <input type="text" name="name" placeholder="Họ và tên người nhận" class="input-control" required>
             </div>
             <div class="form-row">
-                <input type="text" name="phone" placeholder="Số điện thoại" class="input-control">
-                <input type="email" name="email" placeholder="Email" class="input-control">
+                <input type="tel" name="phone" placeholder="Số điện thoại" class="input-control" inputmode="numeric" pattern="[0-9]{10}" title="Số điện thoại phải gồm đúng 10 chữ số" required>
+                <input type="email" name="email" placeholder="Email" class="input-control" required>
             </div>
             <div class="form-group">
                 <select class="input-control" id="province" name="province_id">
@@ -29,7 +34,7 @@
             </div>
             <div class="form-group">
                 <input type="text" name="address" placeholder="Địa chỉ chi tiết (Số nhà, tên đường...)"
-                    class="input-control">
+                    class="input-control" required>
             </div>
             <div class="form-group">
                 <textarea name="note" placeholder="Ghi chú đơn hàng (ví dụ: Giao giờ hành chính)" class="input-control"
@@ -46,6 +51,31 @@
                     <input type="radio" name="payment" value="bank_transfer" style="display: none;">
                     <span class="payment-name">Chuyển khoản Ngân hàng (QR Code)</span>
                 </label>
+            </div>
+
+            <!-- QR Code cho chuyển khoản -->
+            <div id="qr-code-section" class="qr-code-card" style="display: none;">
+                <div class="qr-card-header">
+                    <div>
+                        <h3>Chuyển khoản ngân hàng</h3>
+                        <p>Quét mã QR hoặc chuyển khoản theo thông tin bên dưới.</p>
+                    </div>
+                </div>
+                <div class="qr-card-body">
+                    <div class="qr-image-wrapper">
+                        <img src="/assets/images/image_qr/QR_code.png" alt="QR Code chuyển khoản">
+                    </div>
+                    <div class="qr-bank-details">
+                        <div class="detail-row"><span>Ngân hàng:</span><strong>TPBank</strong></div>
+                        <div class="detail-row"><span>Số tài khoản:</span><strong>00002491268</strong></div>
+                        <div class="detail-row"><span>Chủ tài khoản:</span><strong>Flower Shop</strong></div>
+                        <div class="detail-row"><span>Số tiền:</span><strong id="qr-amount"><?php echo number_format($total); ?> đ</strong></div>
+                        <div class="detail-row"><span>Nội dung:</span><strong>Thanh toan don hang</strong></div>
+                    </div>
+                </div>
+                <div class="qr-card-footer">
+                    <p>Vui lòng chụp ảnh biên nhận sau khi chuyển khoản và gửi lại cho chúng tôi để xác nhận đơn hàng.</p>
+                </div>
             </div>
         </div>
 
@@ -79,8 +109,13 @@
                         <?php echo number_format($total); ?> đ
                     </span>
                 </div>
-                <input type="hidden" name="total_price" value="<?php echo $total; ?>">
-                <button class="btn-complete">HOÀN TẤT ĐẶT HÀNG</button>
+                <input type="hidden" name="total_price" value="<?php echo $total; ?>" data-full-total="<?php echo $total; ?>">
+                <?php if (!empty($selectedItems)): ?>
+                    <?php foreach ($selectedItems as $selectedItem): ?>
+                        <input type="hidden" name="selected_items[]" value="<?php echo $selectedItem; ?>">
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <button class="btn-complete">HOÀN TỐT ĐẶT HÀNG</button>
                 <a href="index.php?action=cart" class="back-to-cart">← Quay lại giỏ hàng</a>
             </div>
         </div>
