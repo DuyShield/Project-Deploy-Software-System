@@ -72,6 +72,9 @@
     .checkout-wrapper {
         grid-template-columns: 1fr;
     }
+    .qr-card-body {
+        grid-template-columns: 1fr;
+    }
 }
 
 /*Design cho footer*/
@@ -516,6 +519,105 @@ table td img {
     font-size: 14px;
     margin-bottom: 10px;
     color: #666;
+}
+/*Design cho QR code*/
+.qr-code-card {
+    display: block;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 22px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin-top: 25px;
+}
+
+.qr-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.qr-card-header h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.qr-card-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.qr-card-header .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #4CAF50;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.qr-card-body {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.qr-image-wrapper {
+    border: 1px solid #ececec;
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    background: #fafafa;
+}
+
+.qr-image-wrapper img {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+}
+
+.qr-bank-details {
+    display: grid;
+    gap: 12px;
+}
+
+.qr-bank-details .detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #f8f9fb;
+}
+
+.qr-bank-details .detail-row span {
+    color: #555;
+    font-size: 14px;
+}
+
+.qr-bank-details .detail-row strong {
+    color: #222;
+    font-size: 14px;
+}
+
+.qr-card-footer {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid #ececec;
+}
+
+.qr-card-footer p {
+    margin: 0;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 .divider {

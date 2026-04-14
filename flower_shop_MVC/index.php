@@ -61,6 +61,9 @@ switch ($action) {
     case 'remove_from_cart':
         $cart->remove_from_cart();
         break;
+    case 'clear_cart':
+        $cart->clear_cart();
+        break;
     case "checkout":
         $cart->checkout();
         break;

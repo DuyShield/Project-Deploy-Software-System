@@ -83,22 +83,24 @@
                 </div>
             </div>
             <!--Modal xóa liên hệ-->
-            <div class="modal fade" id="delModal<?= $c['id'] ?>" tabindex="-1">
-                <div class="modal-dialog modal-sm modal-dialog-centered">
-                    <div class="modal-content border-0 shadow" style="border-radius: 15px;">
-                        <div class="modal-body text-center py-4">
-                            <p class="mb-4">Xóa tin nhắn của <b><?=$c['name'] ?></b>?</p>
-                            <div class="d-flex justify-content-center gap-2">
-                                <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy</button>
-                                <a href="index.php?action=delete_contact&id=<?= $c['id'] ?>" 
-                                   class="btn btn-danger fw-bold border-0 px-3" 
-                                   style="border-radius: 8px;">Đồng ý xóa</a>
-                            </div>
+            <div class="modal fade" id="delModal<?= $c['id'] ?>" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title">Xác nhận xóa</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Bạn có chắc muốn xóa tin nhắn của <strong><?= $c['name'] ?></strong>?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <a href="index.php?action=delete_contact&id=<?= $c['id'] ?>" class="btn btn-danger">Xóa</a>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
         <?php endforeach; ?>
         <?php else: ?>
         <p class="text-center text-muted py-5">Hòm thư hiện đang trống.</p>

@@ -79,17 +79,32 @@ class C_Cart
         header("Location: index.php?action=cart");
         exit();
     }
+
+    //Xóa toàn bộ sản phẩm trong giỏ hàng
+    public function clear_cart()
+    {
+        if (isset($_SESSION['user'])) {
+            $modelCart = new M_Cart();
+            $modelCart->clearCart($_SESSION['user']['id']);
+        } else {
+            unset($_SESSION['cart']);
+        }
+        header("Location: index.php?action=cart");
+        exit();
+    }
     //Cập nhật số lượng sản phẩm trong giỏ hàng
     public function update_cart()
     {
         $id = $_GET['id'] ?? null;
         $op = $_GET['op'] ?? null;
+        $isAjax = isset($_GET['ajax']) || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
 
         if ($id && $op) {
             if (isset($_SESSION['user'])) {
                 //Cập nhật DB
                 $modelCart = new M_Cart();
                 $modelCart->updateQuantityDB($_SESSION['user']['id'], $id, $op);
+                $cartItems = $modelCart->getCartByAccount($_SESSION['user']['id']);
             } else {
                 //Cập nhật Session
                 if (isset($_SESSION['cart'][$id])) {
@@ -97,10 +112,40 @@ class C_Cart
                         $_SESSION['cart'][$id]['quantity']++;
                     } elseif ($op === 'dec') {
                         $_SESSION['cart'][$id]['quantity']--;
-                        if ($_SESSION['cart'][$id]['quantity'] < 1)
+                        if ($_SESSION['cart'][$id]['quantity'] < 1) {
                             unset($_SESSION['cart'][$id]);
+                        }
                     }
                 }
+                $cartItems = $_SESSION['cart'] ?? [];
+            }
+
+            $updatedQuantity = 0;
+            $itemPrice = 0;
+            $itemExists = false;
+            $cartTotal = 0;
+
+            foreach ($cartItems as $itemKey => $item) {
+                $productId = $item['id_product'] ?? $itemKey;
+                $cartTotal += $item['price_product'] * $item['quantity'];
+                if ((string)$productId === (string)$id) {
+                    $updatedQuantity = $item['quantity'];
+                    $itemPrice = $item['price_product'];
+                    $itemExists = true;
+                }
+            }
+
+            if ($isAjax) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => true,
+                    'item_id' => $id,
+                    'quantity' => $updatedQuantity,
+                    'item_total' => $itemPrice * $updatedQuantity,
+                    'cart_total' => $cartTotal,
+                    'removed' => !$itemExists,
+                ]);
+                exit();
             }
         }
         header("Location: index.php?action=cart");
@@ -115,10 +160,17 @@ class C_Cart
         }
         $cartItems = [];
         $total = 0;
+        $selectedItems = [];
 
         $id_account = $_SESSION['user']['id'];
         $modelCart = new M_Cart();
-        $cartItems = $modelCart->getCartByAccount($id_account);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['selected_items'])) {
+            $selectedItems = array_map('intval', (array)$_POST['selected_items']);
+            $cartItems = $modelCart->getCartByAccount($id_account, $selectedItems);
+        } else {
+            $cartItems = $modelCart->getCartByAccount($id_account);
+        }
 
         foreach ($cartItems as $item) {
             $total += $item['price_product'] * $item['quantity'];
@@ -130,27 +182,55 @@ class C_Cart
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id_account = $_SESSION['user']['id'];
-            $name = $_POST['name'];
-            $phone = $_POST['phone'];
-            $email = $_POST['email'];
-            $note = $_POST['note'];
-            $payment_method = $_POST['payment'];
-            $total_money = $_POST['total_price'];
+            $name = trim($_POST['name'] ?? '');
+            $phone = trim($_POST['phone'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $note = trim($_POST['note'] ?? '');
+            $payment_method = $_POST['payment'] ?? 'cod';
+            $total_money = $_POST['total_price'] ?? 0;
+            $address = trim($_POST['address'] ?? '');
+            $selectedItems = !empty($_POST['selected_items']) ? array_map('intval', (array)$_POST['selected_items']) : [];
 
-            $address = $_POST['address'];
+            if ($name === '' || $email === '' || $phone === '' || $address === '') {
+                $_SESSION['checkout_error'] = 'Vui lòng điền đầy đủ họ tên, email, số điện thoại và địa chỉ.';
+                header('Location: index.php?action=checkout');
+                exit();
+            }
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['checkout_error'] = 'Email không hợp lệ.';
+                header('Location: index.php?action=checkout');
+                exit();
+            }
+            if (!preg_match('/^[0-9]{10}$/', $phone)) {
+                $_SESSION['checkout_error'] = 'Số điện thoại phải gồm đúng 10 chữ số.';
+                header('Location: index.php?action=checkout');
+                exit();
+            }
 
             $modelCart = new M_Cart();
+            $cartItems = !empty($selectedItems)
+                ? $modelCart->getCartByAccount($id_account, $selectedItems)
+                : $modelCart->getCartByAccount($id_account);
+
+            if (empty($cartItems)) {
+                $_SESSION['checkout_error'] = 'Không có sản phẩm để thanh toán.';
+                header('Location: index.php?action=cart');
+                exit();
+            }
 
             $id_order = $modelCart->createOrder($id_account, $name, $phone, $email, $address, $note, $total_money, $payment_method);
 
-            $cartItems = $modelCart->getCartByAccount($id_account);
             foreach ($cartItems as $item) {
                 $modelCart->createOrderDetail($id_order, $item['id_product'], $item['quantity'], $item['price_product']);
             }
 
-            $modelCart->clearCart($id_account);
+            if (!empty($selectedItems)) {
+                $modelCart->removeCartItems($id_account, $selectedItems);
+            } else {
+                $modelCart->clearCart($id_account);
+            }
 
-            header("Location: index.php?action=order_success");
+            header('Location: index.php?action=order_success');
             exit();
         }
     }

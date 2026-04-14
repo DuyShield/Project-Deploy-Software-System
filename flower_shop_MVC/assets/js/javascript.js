@@ -170,6 +170,14 @@
         if (radio) {
             radio.checked = true;
         }
+
+        //Mở hoặc đóng QR code dựa trên phương thức thanh toán
+        const qrSection = document.getElementById('qr-code-section');
+        if (radio && radio.value === 'bank_transfer') {
+            qrSection.style.display = 'block';
+        } else {
+            qrSection.style.display = 'none';
+        }
     }
     //Hàm xác nhận xóa đơn hàng
     function confirmDelete(id) {
@@ -194,5 +202,151 @@
             }, 3000);
         });
     });
+    //Hàm validate form checkout
+    function validateCheckout() {
+        const name = document.querySelector('input[name="name"]').value.trim();
+        const email = document.querySelector('input[name="email"]').value.trim();
+        const phone = document.querySelector('input[name="phone"]').value.trim();
+        const address = document.querySelector('input[name="address"]').value.trim();
+        if (!name) {
+            alert('Vui lòng nhập họ và tên người nhận.');
+            return false;
+        }
+        if (!email) {
+            alert('Vui lòng nhập email.');
+            return false;
+        }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            alert('Email không hợp lệ.');
+            return false;
+        }
+        if (!/^[0-9]{10}$/.test(phone)) {
+            alert('Số điện thoại phải gồm đúng 10 chữ số.');
+            return false;
+        }
+        if (!address) {
+            alert('Vui lòng nhập địa chỉ giao hàng.');
+            return false;
+        }
+        return true;
+    }
+    //Hàm tự động format số điện thoại khi người dùng nhập
+    const phoneInput = document.querySelector('input[name="phone"]');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function () {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+    }
+    //Hàm xử lý checkbox chọn tất cả và chọn từng sản phẩm
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    const selectedCheckboxes = document.querySelectorAll('.selected-item-checkbox');
+    //Hàm định dạng số thành định dạng tiền tệ Việt Nam
+    function formatCurrency(value) {
+        return value.toLocaleString('vi-VN') + ' đ';
+    }
+    //Hàm cập nhật tổng tiền khi chọn sản phẩm
+    const subtotalAmountEl = document.getElementById('subtotalAmount');
+    const grandTotalAmountEl = document.getElementById('grandTotalAmount');
+    const totalPriceInput = document.querySelector('input[name="total_price"]');
+    const fullTotal = totalPriceInput ? parseInt(totalPriceInput.dataset.fullTotal, 10) : 0;
+    //Hàm tính tổng tiền dựa trên các checkbox được chọn
+    function updateTotals() {
+        const checkedBoxes = Array.from(selectedCheckboxes).filter(cb => cb.checked);
+        const selectedSum = checkedBoxes.reduce((sum, cb) => sum + parseInt(cb.dataset.itemTotal || 0, 10), 0);
+        const displayTotal = checkedBoxes.length === 0 ? fullTotal : selectedSum;
+
+        if (subtotalAmountEl) subtotalAmountEl.textContent = formatCurrency(displayTotal);
+        if (grandTotalAmountEl) grandTotalAmountEl.textContent = formatCurrency(displayTotal);
+        if (totalPriceInput) totalPriceInput.value = displayTotal;
+    }
+    //Cập nhật trạng thái của checkbox "Chọn tất cả" và tổng tiền
+    function updateSelectAllState() {
+        const checkedCount = Array.from(selectedCheckboxes).filter(cb => cb.checked).length;
+        if (selectAllCheckbox) {
+            selectAllCheckbox.checked = checkedCount === selectedCheckboxes.length && checkedCount > 0;
+        }
+    }
+    //Lưu trạng thái checkbox vào localStorage khi refresh trang 
+    const storageKey = 'cart_selected_items';
+    const checkboxes = Array.from(document.querySelectorAll('.selected-item-checkbox'));
+    const getSavedSelection = () => {
+        try {
+            return JSON.parse(localStorage.getItem(storageKey)) || [];
+        } catch (e) {
+            return [];
+        }
+    };
+    //Lưu trạng thái checkbox vào localStorage
+    const saveSelection = ids => {
+        localStorage.setItem(storageKey, JSON.stringify(ids));
+    };
+    //Đồng bộ trạng thái checkbox với localStorage mỗi khi có thay đổi
+    const syncStorage = () => {
+        const selectedIds = checkboxes.filter(cb => cb.checked).map(cb => cb.value);
+        saveSelection(selectedIds);
+    };
+    //Khôi phục trạng thái checkbox từ localStorage khi trang được tải lại
+    const restoreSelection = () => {
+        const saved = getSavedSelection();
+        if (saved.length === 0) {
+            checkboxes.forEach(cb => cb.checked = true);
+        } else {
+            checkboxes.forEach(cb => cb.checked = saved.includes(cb.value));
+        }
+        updateSelectAllState();
+        updateTotals();
+    };
+    //Gắn sự kiện cho checkbox "Chọn tất cả" và các checkbox sản phẩm
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function () {
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            syncStorage();
+            updateTotals();
+        });
+    }
+    //Gắn sự kiện cho từng checkbox sản phẩm để cập nhật tổng tiền và trạng thái "Chọn tất cả"
+    selectedCheckboxes.forEach(cb => {
+        cb.addEventListener('change', function () {
+            updateSelectAllState();
+            syncStorage();
+            updateTotals();
+        });
+    });
+
+    updateTotals();
+    restoreSelection();
+
+    // AJAX for quantity update (Lụm trên github)
+    document.querySelectorAll('.cart-qty-btn').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const id = this.dataset.id;
+            const op = this.dataset.op;
+            fetch(`index.php?action=update_cart&id=${id}&op=${op}&ajax=1`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.removed) {
+                            document.getElementById(`cart-row-${id}`).remove();
+                            updateTotals();
+                            if (document.querySelectorAll('.selected-item-checkbox').length === 0) {
+                                location.reload();
+                            }
+                        } else {
+                            const qtyValue = document.querySelector(`#cart-row-${id} .cart-qty-value`);
+                            qtyValue.value = data.quantity;
+                            const itemTotal = document.querySelector(`#cart-row-${id} .item-total`);
+                            itemTotal.textContent = formatCurrency(data.item_total);
+                            const checkbox = document.querySelector(`#cart-row-${id} .selected-item-checkbox`);
+                            checkbox.dataset.itemTotal = data.item_total;
+                            updateTotals();
+                        }
+                    }
+                });
+        });
+    });
 }
+
+
 
