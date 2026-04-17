@@ -1,5 +1,7 @@
 <?php require "views/layout/header.php"; ?>
-
+<body class="site-container">
+    <main class="main-content"></div>
+<!-- Trang chi tiết liên hệ của khách hàng -->
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -71,4 +73,6 @@
         </div>
     </div>
 </div>
+</main>
+</body>
 <?php require "views/layout/footer.php"; ?>
