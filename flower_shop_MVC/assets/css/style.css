@@ -69,21 +69,90 @@
         width: 100%;
         margin-top: 10px;
     }
+
+    .navbar {
+        overflow: visible;
+    }
+
+    .navbar-collapse {
+        overflow: visible;
+    }
+
+    .navbar .dropdown-menu {
+        left: 0 !important;
+        right: auto !important;
+        min-width: 180px;
+        max-width: calc(100vw - 1rem);
+        width: auto;
+        word-wrap: break-word;
+        z-index: 1050;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
     .checkout-wrapper {
         grid-template-columns: 1fr;
     }
     .qr-card-body {
         grid-template-columns: 1fr;
     }
+
+    .product-management-page .product-management-search-card .col-12 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    .product-management-page .product-management-search-card .btn {
+        width: 100%;
+    }
 }
 
+@media (max-width: 768px) {
+    .product-management-page .table-responsive {
+        overflow-x: auto;
+    }
+
+    .product-management-page .table-responsive table {
+        min-width: 720px;
+    }
+
+    .product-management-page .table-responsive td,
+    .product-management-page .table-responsive th {
+        white-space: normal;    
+    }
+
+    .product-management-page .table-responsive td img {
+        max-width: 45px;
+        max-height: 45px;
+    }
+}
+@media (max-height: 990px) and (max-width: 990px) and (orientation: landscape) {
+    .dropdown-menu {
+        max-height: 120px !important;
+        overflow-y: auto !important;
+    }
+}
 /*Design cho footer*/
 .flower-footer {
     background: #e8f6ef;
     padding: 40px 0;
     color: #3d8f5b;
+    flex-shrink: 0;
+}
+/*Đảm bảo footer luôn ở dưới cùng của trang*/
+.site-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
 }
 
+/* Phần nội dung chính sẽ tự động giãn ra để đẩy footer xuống */
+.main-content {
+  flex: 1; 
+}
 .footer-title {
     font-weight: 600;
     margin-bottom: 15px;
@@ -203,10 +272,21 @@
 }
 
 /*Design cho login + register*/
+html,
+body {
+    min-height: 100vh;
+}
+
 body {
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
     font-family: 'Segoe UI', sans-serif;
+}
+
+.flower-footer {
+    margin-top: auto;
 }
 
 .bg-login {
