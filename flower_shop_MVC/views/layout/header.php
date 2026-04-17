@@ -17,7 +17,6 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-green-100 sticky-top" style="border-bottom:1px green solid;">
-        <!-- Header với logo, menu, thanh tìm kiếm và phần đăng nhập/đăng ký -->
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center" href="index.php">
@@ -55,12 +54,11 @@ if (session_status() === PHP_SESSION_NONE) {
                 <!--Login / Register-->
                 <div class="d-flex align-items-center justify-content-end flex-wrap gap-2">
                     <?php if (isset($_SESSION['user'])): ?>
-                        <div class="dropdown drop-up-mobile me-3">
+                        <div class="dropdown me-3">
                             <a class="nav-link dropdown-toggle fw-bold text-dark p-0" href="#" role="button"
                                 id="userMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                 Xin chào <?= $_SESSION['user']['username'] ?>
                             </a>
-
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 overflow-hidden">
                                 <?php if ($_SESSION['user']['role'] == 'admin'): ?>
                                     <li>

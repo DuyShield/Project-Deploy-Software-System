@@ -14,8 +14,6 @@
         </div>
     <?php endif; ?>
 </div>
-<body class="site-container">
-    <main class="main-content">
 <div class="container mt-5 mb-5">
     <div class="row g-4">
         <!--Thông tin liên hệ-->
@@ -93,6 +91,5 @@
         </iframe>
     </div>
 </div>
-        </main>
-</body>
+
 <?php require "views/layout/footer.php"; ?>

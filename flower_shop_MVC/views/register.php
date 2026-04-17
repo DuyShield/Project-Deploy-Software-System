@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Đăng ký - Flower Cat Shop</title>
-    <link rel="icon" href="assets/images/image_logos/logo2.png" type="image/icon">
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<!-- Đăng ký -->
+
 <body class="bg-register">
     <div class="auth-container">
         <div class="auth-card">

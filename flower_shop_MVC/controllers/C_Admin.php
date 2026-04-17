@@ -89,8 +89,8 @@ class C_Admin
     //Xóa đơn hàng
     public function delete_order()
     {
-        if (isset($_POST['id'])) {
-            $id = $_POST['id'];
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
             $orderModel = new M_Cart();
             $result = $orderModel->deleteOrder($id);
             if ($result) {
