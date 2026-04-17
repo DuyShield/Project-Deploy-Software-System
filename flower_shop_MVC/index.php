@@ -109,7 +109,7 @@ switch ($action) {
             $admin->update_status();
         if ($action == "delete_order")
             $admin->delete_order();
-        if ($action == "send_reply")    
+        if ($action == "send_reply")
             $admin->send_reply();
         if ($action == "delete_contact")
             $admin->delete_contact();
