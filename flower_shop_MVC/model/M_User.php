@@ -93,4 +93,33 @@ class M_User
         $sql = "UPDATE contacts SET reply = ? WHERE id = ?";
         return $this->db->execute($sql, "si", [$reply, $id]);
     }
+    // Lưu bình luận mới
+    public function insertComment($id_product, $id_user, $content, $rating, $id_order)
+    {
+        $sql = "INSERT INTO comments (id_product, id_account, content, rating, id_order, created_at) 
+                VALUES (?, ?, ?, ?, ?, NOW())";
+        return $this->db->execute($sql, "iisii", [$id_product, $id_user, $content, $rating, $id_order]);
+    }
+    // Thêm sản phẩm vào yêu thích
+    public function addWishlist($userId, $productId)
+    {
+        $sql = "INSERT IGNORE INTO wishlists (id_account, id_product) VALUES (?, ?)";
+        return $this->db->execute($sql,"ss", [$userId, $productId]);
+    }
+
+    // Xóa khỏi yêu thích
+    public function removeWishlist($userId, $productId)
+    {
+        $sql = "DELETE FROM wishlists WHERE id_account = ? AND id_product = ?";
+        return $this->db->execute($sql, "ss", [$userId, $productId]);
+    }
+
+    // Lấy danh sách sản phẩm yêu thích của user
+    public function getWishlistByUser($userId)
+    {
+        $sql = "SELECT p.* FROM products p 
+                JOIN wishlists w ON p.id_product = w.id_product 
+                WHERE w.id_account = ?";
+        return $this->db->select($sql, "s", [$userId]);
+    }
 }

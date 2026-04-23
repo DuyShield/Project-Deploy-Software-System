@@ -24,6 +24,11 @@ class C_Product
         $id = $_GET['id'];
         $model = new M_Product();
         $product = $model->getProductById($id);
+        $comments = $model->getCommentsByProduct($id);
+        if (isset($_SESSION['user'])) {
+            $userId = $_SESSION['user']['id'];
+            $hasPurchased = $model->checkUserPurchased($userId, $id);
+        }
         include "views/product_detail.php";
     }
     //Trang tìm kiếm sản phẩm
@@ -34,5 +39,28 @@ class C_Product
         $products = $model->searchProducts($keyword);
         $isSearch = true;
         include "views/home.php";
-    }    
+    }
+    // 1. Hiển thị trang viết đánh giá
+    public function write_review()
+    {
+        $id_product = $_GET['id_product'];
+        $id_order = $_GET['id_order'];
+
+        // Lấy thông tin sản phẩm để hiển thị lên form cho khách xem
+        $model = new M_Product();
+        $product = $model->getProductById($id_product);
+
+        include "views/write_review.php";
+    }
+
+    //Trang viết đánh giá
+    public function review_page()
+    {
+        $id_product = $_GET['id_product'];
+        $id_order = $_GET['id_order'];
+        $model = new M_Product();
+        $product = $model->getProductById($id_product);
+        include "views/comment.php";
+    }
+
 }

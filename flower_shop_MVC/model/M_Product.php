@@ -70,5 +70,25 @@ class M_Product
         $sql = "SELECT * FROM products WHERE id_category = ?";
         return $this->db->select($sql, "i", [$id_category]);
     }
+    //Lấy bình luận của sản phẩm
+    public function checkUserPurchased($userId, $productId)
+    {
+        $sql = "SELECT COUNT(*) FROM orders 
+            JOIN order_details ON orders.id_order = order_details.id_order 
+            WHERE orders.id_account = ? 
+            AND order_details.id_product = ? 
+            AND orders.status = '2'";
+        $stmt = $this->db->select($sql, "ii", [$userId, $productId]);
+        return !empty($stmt) && $stmt[0]['COUNT(*)'] > 0;
+    }
+    // Lấy danh sách bình luận để hiển thị ở trang Detail sản phẩm
+    public function getCommentsByProduct($id_product) {
+        $sql = "SELECT comments.*, accounts.username 
+                FROM comments 
+                JOIN accounts ON comments.id_account = accounts.id 
+                WHERE id_product = ? AND status = 1 
+                ORDER BY created_at DESC";
+        return $this->db->select($sql, "i", [$id_product]);
+    }
 
 }

@@ -1,5 +1,5 @@
 <?php require "views/layout/header.php"; ?>
-
+<!-- Trang hiển thị danh sách sản phẩm trên trang chủ -->
 <body>
     <?php if (!isset($isSearch) && empty($hideBanner)) { ?>
         <div class="container mt-4">
@@ -64,6 +64,7 @@
     <?php } ?>
     <div class="container mt-4">
         <h2 class="title-section fw-bold text-uppercase">
+            <!-- Nếu đang hiển thị kết quả tìm kiếm thì hiển thị keyword, ngược lại hiển thị "Danh sách hoa" -->
             <?php if (isset($isSearch)) {
                 echo "Kết quả tìm kiếm cho: <b>$keyword</b>";
             } else {
@@ -71,6 +72,7 @@
             } ?>
         </h2>
         <div class="row g-3">
+            <!-- Danh sách sản phẩm sẽ được hiển thị ở đây -->
             <?php if (!empty($products))
                 foreach ($products as $row) { ?>
                     <div class="col-md-3 col-sm-6 col-12">

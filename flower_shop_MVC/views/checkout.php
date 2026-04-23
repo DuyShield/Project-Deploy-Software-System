@@ -1,13 +1,16 @@
 <?php require "views/layout/header.php"; ?>
+<!-- Trang hiển thị form thanh toán khi khách hàng tiến hành đặt hàng -->
 <form action="index.php?action=process_checkout" method="POST" onsubmit="return validateCheckout()">
     <div class="checkout-wrapper">
         <div class="checkout-form">
             <h2 class="section-title">THÔNG TIN GIAO HÀNG</h2>
+            <!-- Hiển thị lỗi nếu có -->
             <?php if (!empty($_SESSION['checkout_error'])): ?>
                 <div class="form-error" style="color: #d9534f; margin-bottom: 1rem;">
                     <?php echo $_SESSION['checkout_error']; unset($_SESSION['checkout_error']); ?>
                 </div>
             <?php endif; ?>
+            <!-- Form nhập thông tin giao hàng -->
             <div class="form-group">
                 <input type="text" name="name" placeholder="Họ và tên người nhận" class="input-control" required>
             </div>
@@ -40,6 +43,7 @@
                 <textarea name="note" placeholder="Ghi chú đơn hàng (ví dụ: Giao giờ hành chính)" class="input-control"
                     rows="3"></textarea>
             </div>
+            <!-- Phương thức thanh toán -->
             <h2 class="section-title" style="margin-top: 40px;">PHƯƠNG THỨC THANH TOÁN</h2>
             <div class="payment-options">
                 <label class="payment-card active js-payment-card" onclick="changeActivePayment(this)">
@@ -78,7 +82,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- Sidebar hiển thị tóm tắt đơn hàng -->
         <div class="order-sidebar">
             <div class="summary-box">
                 <h3 class="summary-title">ĐƠN HÀNG CỦA BẠN</h3>

@@ -7,7 +7,7 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
-
+<!--Form đăng ký-->
 <body class="bg-register">
     <div class="auth-container">
         <div class="auth-card">

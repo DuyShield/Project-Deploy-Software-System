@@ -79,6 +79,21 @@ switch ($action) {
     case "order_detail":
         $user->order_detail();
         break;
+    case "save_review":
+        $user->submit_review();
+        break;
+    case "write_review":
+        $product->review_page();
+        break;
+    case "my_wishlist":
+        $user->view_wishlist();
+        break;
+    case "add_wishlist":
+        $user->add_wishlist();
+        break;
+    case "remove_wishlist":
+        $user->remove_wishlist();
+        break;
     case "product_management":
     case "search_product_management":
     case "save_product":

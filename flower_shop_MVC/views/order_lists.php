@@ -1,4 +1,5 @@
 <?php require "views/layout/header.php"; ?>
+<!--Trang quản lý đơn hàng dành cho admin-->
 <div id="notification-container">
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert-box success">
@@ -14,12 +15,14 @@
         </div>
     <?php endif; ?>
 </div>
+<!--Danh sách đơn hàng-->
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-dark text-uppercase">QUẢN LÝ ĐẶT HÀNG</h2>
     </div>
 
     <div class="table-responsive shadow-sm rounded">
+        <!--Bảng hiển thị các đơn hàng-->
         <table class="table table-hover align-middle bg-white mb-2">
             <thead class="table-color">
                 <tr>
@@ -97,6 +100,7 @@
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
+                    <!-- Nếu không có đơn hàng nào -->
                     <tr>
                         <td colspan="6" class="text-center p-5 text-muted">Chưa có đơn hàng nào.</td>
                     </tr>

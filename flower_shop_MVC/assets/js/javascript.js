@@ -1,14 +1,4 @@
 {
-    //Mở hoặc đóng thanh tìm kiếm
-    function toggleSearch() {
-        let search = document.getElementById("searchInput");
-
-        if (search.style.display === "none") {
-            search.style.display = "block";
-        } else {
-            search.style.display = "none";
-        }
-    }
     let totalSeconds = 3600;
     //Đếm lùi thời gian sale
     function updateCountdown() {
@@ -344,6 +334,26 @@
                         }
                     }
                 });
+        });
+    });
+    //Xử lý sự kiện show của Modal xóa wishlist
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalDelete = document.getElementById('modalDelete');
+
+        modalDelete.addEventListener('show.bs.modal', function (event) {
+            // Nút kích hoạt modal
+            const button = event.relatedTarget;
+
+            // Lấy dữ liệu từ các thuộc tính data-id và data-name
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+
+            // Đổ dữ liệu vào các thẻ trong Modal
+            const inputId = modalDelete.querySelector('#deleteProductId');
+            const textName = modalDelete.querySelector('#deleteProductName');
+
+            inputId.value = id;
+            textName.textContent = name;
         });
     });
 }

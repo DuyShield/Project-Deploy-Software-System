@@ -1,9 +1,9 @@
 <?php require "views/layout/header.php"; ?>
+<!-- Trang hiển thị danh sách đơn hàng của khách hàng -->
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-dark text-uppercase">ĐƠN HÀNG CỦA TÔI</h2>
     </div>
-
     <div class="table-responsive shadow-sm rounded">
         <table class="table table-hover align-middle bg-white mb-2">
             <thead class="table-color">
@@ -16,6 +16,7 @@
                     <th class="text-center" style="width: 15%">Thao tác</th>
                 </tr>
             </thead>
+            <!-- Danh sách đơn hàng sẽ được hiển thị ở đây -->
             <tbody>
                 <?php if (!empty($orders)): ?>
                     <?php foreach ($orders as $row): ?>
@@ -58,6 +59,7 @@
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
+                    <!-- Nếu không có đơn hàng nào -->
                     <tr>
                         <td colspan="6" class="text-center p-5 text-muted">
                             Bạn chưa có đơn hàng nào. <br>

@@ -69,12 +69,58 @@
         width: 100%;
         margin-top: 10px;
     }
+
     .checkout-wrapper {
         grid-template-columns: 1fr;
     }
+
     .qr-card-body {
         grid-template-columns: 1fr;
     }
+}
+
+@media (max-width: 981px) {
+    .dropdown-menu-end {
+        position: absolute !important;
+        right: 0 !important;
+        left: auto !important;
+    }
+
+    .custom-dropdown {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+}
+
+@media (min-width: 982px) {
+    .navbar-collapse {
+        flex-grow: 1;
+    }
+
+    .order-lg-last {
+        margin-left: 20px;
+    }
+}
+
+/*Icon profile*/
+.profile-icon-container {
+    width: 38px;
+    height: 38px;
+    background-color: #e4e6eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.profile-icon-container:hover {
+    background-color: #d8dadf;
+}
+
+.profile-icon-container i {
+    font-size: 1.1rem;
 }
 
 /*Design cho footer*/
@@ -446,12 +492,14 @@ table td img {
 .btn-sm {
     font-size: 0.8rem;
 }
+
 /*Design cho trang checkout*/
 :root {
     --primary-color: #2D2D2D;
     --bg-light: #F9F9F9;
     --border-color: #E0E0E0;
-    --accent-color: #E8F5E9; /* Màu xanh từ Header của bạn */
+    --accent-color: #E8F5E9;
+    /* Màu xanh từ Header của bạn */
 }
 
 .checkout-wrapper {
@@ -520,6 +568,7 @@ table td img {
     margin-bottom: 10px;
     color: #666;
 }
+
 /*Design cho QR code*/
 .qr-code-card {
     display: block;
@@ -527,7 +576,7 @@ table td img {
     border-radius: 14px;
     padding: 22px;
     background: #fff;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     margin-top: 25px;
 }
 
@@ -665,8 +714,10 @@ table td img {
     color: #666;
     font-size: 14px;
 }
+
 .group-hidden {
-    display: none; /* Ẩn hoàn toàn */
+    display: none;
+    /* Ẩn hoàn toàn */
     opacity: 0;
     transition: opacity 0.5s ease;
 }
@@ -675,6 +726,7 @@ table td img {
     display: block !important;
     opacity: 1;
 }
+
 /*Design cho notification*/
 #notification-container {
     position: fixed;
@@ -693,16 +745,30 @@ table td img {
     display: flex;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     animation: slideIn 0.5s ease-out forwards;
 }
 
-.success { background-color: #88fd9f; border-left: 5px solid #27ae60; }
-.error { background-color: #e74c3c; border-left: 5px solid #c0392b; }
+.success {
+    background-color: #88fd9f;
+    border-left: 5px solid #27ae60;
+}
+
+.error {
+    background-color: #e74c3c;
+    border-left: 5px solid #c0392b;
+}
 
 @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 .fade-out {
@@ -710,6 +776,77 @@ table td img {
 }
 
 @keyframes slideOut {
-    from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(100%); opacity: 0; }
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Design for comment */
+.comment-section {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    /* Đảm bảo font hiện đại */
+}
+
+.comment-title {
+    color: #2d3436;
+    border-left: 5px solid #a5d6a7;
+    /* Màu xanh lá nhạt của shop */
+    padding-left: 15px;
+}
+
+.btn-flower {
+    background-color: #a5d6a7;
+    /* Xanh lá nhạt theo logo */
+    color: #1b5e20;
+    border: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-flower:hover {
+    background-color: #81c784;
+    color: white;
+}
+
+.alert-flower {
+    background-color: #f1f8e9;
+    border: 1px solid #c5e1a5;
+    color: #33691e;
+    border-radius: 10px;
+}
+
+.comment-item {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 0;
+}
+
+/* Design for comment form */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: #ddd;
+    cursor: pointer;
+    transition: 0.2s;
+    padding: 0 5px;
+}
+
+/* Khi di chuột qua hoặc được chọn, sao sẽ đổi màu vàng */
+.star-rating input:checked~label,
+.star-rating label:hover,
+.star-rating label:hover~label {
+    color: #ffc107 !important;
 }

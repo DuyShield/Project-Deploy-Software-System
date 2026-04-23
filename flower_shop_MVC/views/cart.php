@@ -1,15 +1,16 @@
 <?php require "views/layout/header.php";
 ?>
-
+<!-- Trang hiển thị giỏ hàng của khách hàng -->
 <div class="container my-5">
     <h2 class="mb-4 fw-bold text-uppercase">Giỏ hàng</h2>
-
+    <!-- Hiển thị thông báo nếu có -->
     <?php if (empty($cartItems)): ?>
         <div class="text-center py-5 border rounded bg-light">
             <p class="mb-3 text-secondary">Giỏ hàng của bạn hiện đang trống.</p>
             <a href="index.php" class="btn btn-outline-dark rounded-0 px-4 fw-bold">QUAY LẠI CỬA HÀNG</a>
         </div>
     <?php else: ?>
+        <!-- Bảng hiển thị các sản phẩm trong giỏ hàng -->
         <div class="row g-5">
             <div class="col-lg-8">
                 <form action="index.php?action=checkout" method="POST" id="cartForm">
@@ -30,6 +31,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- Danh sách sản phẩm trong giỏ hàng sẽ được hiển thị ở đây -->
                                 <?php foreach ($cartItems as $id => $item):
                                     //Xác định ID sản phẩm
                                     $productId = $item['id_product'] ?? $id;
@@ -61,6 +63,7 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <!-- Cột điều chỉnh số lượng sản phẩm -->
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center">
                                                 <div class="d-inline-flex border align-items-center bg-white"
@@ -94,7 +97,7 @@
                         <button type="button" class="btn btn-link text-danger text-decoration-none small fw-bold p-0" data-bs-toggle="modal" data-bs-target="#modalClearCart">Xóa tất cả giỏ hàng</button>
                     </div>
             </div>
-
+            <!-- Sidebar hiển thị tóm tắt đơn hàng -->
             <div class="col-lg-4">
                 <div class="p-4 bg-light border" style="top: 90px;">
                     <h5 class="fw-bold mb-4 text-uppercase">Thông tin đơn hàng</h5>

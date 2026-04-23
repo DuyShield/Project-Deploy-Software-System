@@ -1,4 +1,5 @@
 <?php require "views/layout/header.php"; ?>
+<!-- Trang hiển thị trang liên hệ -->
 <div id="notification-container">
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert-box success">

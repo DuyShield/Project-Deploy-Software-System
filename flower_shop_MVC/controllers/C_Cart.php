@@ -34,15 +34,21 @@ class C_Cart
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = $_POST['id_product'];
-            $quantity = $_POST['quantity'];
+            $quantity = (int) $_POST['quantity'];
+            $name_product = $_POST['name_product'];
+
+            // Mặc định ban đầu là thất bại
+            $is_success = false;
 
             if (isset($_SESSION['user'])) {
-                //For user use account
+                // THÀNH VIÊN (Lưu DB)
                 $id_account = $_SESSION['user']['id'];
                 $modelCart = new M_Cart();
-                $modelCart->addToCartDB($id_account, $id, $quantity);
+                if ($modelCart->addToCartDB($id_account, $id, $quantity)) {
+                    $is_success = true;
+                }
             } else {
-                //For user use guest account
+                // KHÁCH (Lưu Session)
                 if (!isset($_SESSION['cart'])) {
                     $_SESSION['cart'] = [];
                 }
@@ -52,16 +58,24 @@ class C_Cart
                 } else {
                     $_SESSION['cart'][$id] = [
                         'id_product' => $id,
-                        'name_product' => $_POST['name_product'],
+                        'name_product' => $name_product,
                         'price_product' => $_POST['price_product'],
                         'image' => $_POST['image'],
                         'quantity' => $quantity
                     ];
                 }
+                $is_success = true;
             }
-            header("Location: index.php?action=cart");
-            exit();
 
+            // Kiểm tra biến flag để gửi thông báo
+            if ($is_success) {
+                $_SESSION['success'] = "Đã thêm $name_product vào giỏ hàng!";
+            } else {
+                $_SESSION['error'] = "Lỗi: Không thể thêm vào giỏ hàng.";
+            }
+
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
         }
     }
     //Xóa sản phẩm khỏi giỏ hàng
@@ -128,7 +142,7 @@ class C_Cart
             foreach ($cartItems as $itemKey => $item) {
                 $productId = $item['id_product'] ?? $itemKey;
                 $cartTotal += $item['price_product'] * $item['quantity'];
-                if ((string)$productId === (string)$id) {
+                if ((string) $productId === (string) $id) {
                     $updatedQuantity = $item['quantity'];
                     $itemPrice = $item['price_product'];
                     $itemExists = true;
@@ -166,7 +180,7 @@ class C_Cart
         $modelCart = new M_Cart();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['selected_items'])) {
-            $selectedItems = array_map('intval', (array)$_POST['selected_items']);
+            $selectedItems = array_map('intval', (array) $_POST['selected_items']);
             $cartItems = $modelCart->getCartByAccount($id_account, $selectedItems);
         } else {
             $cartItems = $modelCart->getCartByAccount($id_account);
@@ -189,7 +203,7 @@ class C_Cart
             $payment_method = $_POST['payment'] ?? 'cod';
             $total_money = $_POST['total_price'] ?? 0;
             $address = trim($_POST['address'] ?? '');
-            $selectedItems = !empty($_POST['selected_items']) ? array_map('intval', (array)$_POST['selected_items']) : [];
+            $selectedItems = !empty($_POST['selected_items']) ? array_map('intval', (array) $_POST['selected_items']) : [];
 
             if ($name === '' || $email === '' || $phone === '' || $address === '') {
                 $_SESSION['checkout_error'] = 'Vui lòng điền đầy đủ họ tên, email, số điện thoại và địa chỉ.';

@@ -1,5 +1,5 @@
 <?php require "views/layout/header.php"; ?>
-
+<!--Trang hiển thị khi đặt hàng thành công-->
 <div class="container text-center" style="padding: 100px 0;">
     <div class="success-icon" style="font-size: 80px; color: #28a745;">
         <i class="fas fa-check-circle"></i> </div>

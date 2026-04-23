@@ -1,4 +1,5 @@
 <?php require "views/layout/header.php"; ?>
+<!-- Trang hiển thị danh sách liên hệ của khách hàng -->
 <div id="notification-container">
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert-box success">
@@ -14,6 +15,7 @@
         </div>
     <?php endif; ?>
 </div>
+<!-- Danh sách liên hệ sẽ được hiển thị ở đây -->
 <div class="container my-5">
     <h3 class="fw-bold mb-4">HÒM THƯ KHÁCH HÀNG</h3>
     <?php if (!empty($contacts)): ?>

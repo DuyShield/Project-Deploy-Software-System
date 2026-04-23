@@ -204,8 +204,77 @@ class C_User
         if (!$order || $order['id_account'] != $_SESSION['user']['id']) {
             die("Bạn không có quyền xem đơn hàng này!");
         }
-
+        $isDelivered = ($order['status'] == 2);
+        $totalColumns = $isDelivered ? 5 : 4;
         $items = $cartModel->getOrderItems($id_order);
         include "views/order_detail.php";
+    }
+    //Xử lý khi khách bấm nút "Gửi đánh giá"
+    public function submit_review()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id_product = $_POST['id_product'];
+            $id_order = $_POST['id_order'];
+            $id_user = $_SESSION['user']['id'];
+            $content = $_POST['content'];
+            $rating = $_POST['rating'];
+
+            $commentModel = new M_User();
+            $result = $commentModel->insertComment($id_product, $id_user, $content, $rating, $id_order);
+
+            if ($result) {
+                // Lưu thành công thì quay về trang chi tiết đơn hàng
+                header("Location: index.php?action=order_detail&id=" . $id_order);
+            } else {
+                echo "Có lỗi xảy ra khi gửi bình luận.";
+            }
+        }
+    }
+    //Thêm sản phẩm vào yêu thích
+    public function add_wishlist()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id_product = $_POST['id_product'];
+            $id_account = $_SESSION['user']['id'];
+            $model = new M_User();
+
+            if ($model->addWishlist($id_account, $id_product)) {
+                // Gửi trạng thái thành công
+                $_SESSION['success'] = "Đã thêm vào danh sách yêu thích!";
+            } else {
+                // Gửi trạng thái thất bại
+                $_SESSION['error'] = "Có lỗi xảy ra, vui lòng thử lại.";
+            }
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+    }
+    //Xem sản phẩm yêu thích
+    public function view_wishlist()
+    {
+        $userId = $_SESSION['user']['id'];
+        $model = new M_User();
+        $items = $model->getWishlistByUser($userId);
+        include "views/wishlist.php";
+    }
+    //Xóa sản phẩm khỏi yêu thích
+    public function remove_wishlist()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $id_product = $_POST['id_product']; // Nhận từ input hidden trong modal
+            $id_account = $_SESSION['user']['id'];
+
+            $model = new M_User();
+
+            if ($model->removeWishlist($id_account, $id_product)) {
+                $_SESSION['success'] = "Sản phẩm đã được xóa khỏi danh sách yêu thích!";
+                header("Location: index.php?action=view_wishlist&status=success");
+                exit();
+            } else {
+                $_SESSION['error'] = "Có lỗi xảy ra khi xóa sản phẩm khỏi danh sách yêu thích.";
+                header("Location: index.php?action=view_wishlist&status=error");
+                exit();
+            }
+        }
     }
 }
