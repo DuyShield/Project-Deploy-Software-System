@@ -17,7 +17,7 @@
 </div>
 <!-- Danh sách liên hệ sẽ được hiển thị ở đây -->
 <div class="container my-5">
-    <h3 class="fw-bold mb-4">HÒM THƯ KHÁCH HÀNG</h3>
+    <h3 class="fw-bold mb-4">HÒM THƯ TỪ KHÁCH HÀNG LIÊN HỆ</h3>
     <?php if (!empty($contacts)): ?>
         <?php foreach ($contacts as $c): ?>      
             <div class="card mb-3 border-0 shadow-sm" style="background-color: #f9fdfa; border-radius: 12px;">

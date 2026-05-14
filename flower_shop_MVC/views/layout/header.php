@@ -30,9 +30,9 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="dropdown">
                         <a class="nav-link p-0 d-flex align-items-center" href="#" id="userMenuLink"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <div class="profile-icon-container">
-                                <i class="fa-solid fa-user text-success"></i>
-                            </div>
+                            <img src="assets/images/<?= ($_SESSION['user']['avatar'] == 'default.jpg') ? 'image_avatar_default/' : 'image_avatar_users/' ?><?= $_SESSION['user']['avatar'] ?>"
+                                 alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                            <span class="d-none d-md-inline"><?= htmlspecialchars($_SESSION['user']['username']) ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 custom-dropdown">
                             <li><a class="dropdown-item py-2" href="index.php?action=profile">Thông tin cá nhân</a></li>
@@ -41,9 +41,7 @@ if (session_status() === PHP_SESSION_NONE) {
                             </li>
                             <!-- Các liên kết dành cho admin -->
                             <?php if ($_SESSION['user']['role'] == 'admin'): ?>
-                                <li><a class="dropdown-item py-2" href="index.php?action=product_management">Quản lý sản
-                                        phẩm</a></li>
-                                <li><a class="dropdown-item py-2" href="index.php?action=order_lists">Quản lý đơn hàng</a></li>
+                                <li><a class="dropdown-item py-2" href="index.php?action=dashboard">Dashboard</a></li>
                                 <li><a class="dropdown-item py-2" href="index.php?action=contact_list">Quản lý liên hệ</a></li>
                             <?php endif; ?>
                             <!-- Các liên kết dành cho user -->
@@ -74,7 +72,30 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="collapse navbar-collapse" id="mynavbar">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="index.php">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?action=product">Sản phẩm</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="index.php?action=product" role="button" data-bs-toggle="dropdown">
+                            Sản phẩm
+                        </a>
+                        <?php
+                        if (session_status() === PHP_SESSION_NONE) {
+                            session_start();
+                        }
+                        require_once "model/M_Category.php";
+                        $catModel = new M_Category();
+                        $categories = $catModel->getAllCategories();
+                        ?>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="index.php?action=product">Tất cả sản phẩm</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <?php if (!empty($categories)): ?>
+                                <?php foreach ($categories as $cat): ?>
+                                    <li><a class="dropdown-item" href="index.php?action=filter_by_category&category_id=<?= $cat['id_category'] ?>">
+                                        <?= $cat['name_category'] ?>
+                                    </a></li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
                     <li class="nav-item"><a class="nav-link" href="index.php?action=contact">Liên hệ</a></li>
                 </ul>
                 <!-- Form tìm kiếm sản phẩm -->

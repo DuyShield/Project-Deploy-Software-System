@@ -7,6 +7,24 @@
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
 </head>
+<!-- Hiển thị thông báo -->
+<div id="notification-container">
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert-box success">
+            <i class="fas fa-check-circle"></i>
+            <span><?= $_SESSION['success'];
+            unset($_SESSION['success']); ?></span>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert-box error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><?= $_SESSION['error'];
+            unset($_SESSION['error']); ?></span>
+        </div>
+    <?php endif; ?>
+</div>
 <!--Form đăng nhập-->
 <body class="bg-login">
     <div class="auth-container">
@@ -47,5 +65,6 @@
         </div>
     </div>
 </body>
-
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/javascript.js"></script>
 </html>

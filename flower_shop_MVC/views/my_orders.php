@@ -43,8 +43,8 @@
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="index.php?action=order_detail&id=<?= $row['id_order'] ?>" 
-                                       class="btn btn-sm btn-info fw-bold text-white px-3">
+                                    <a href="index.php?action=order_detail&id=<?= $row['id_order'] ?>&return=my_orders" 
+                                       class="btn btn-sm btn-info fw-bold text-white text-center" style="min-width: 120px;">
                                         Xem
                                     </a>
 

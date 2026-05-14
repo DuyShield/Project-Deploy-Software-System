@@ -4,23 +4,34 @@
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert-box success">
             <i class="fas fa-check-circle"></i>
-            <span><?= $_SESSION['success']; unset($_SESSION['success']); ?></span>
+            <span><?= $_SESSION['success'];
+            unset($_SESSION['success']); ?></span>
         </div>
     <?php endif; ?>
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert-box error">
             <i class="fas fa-exclamation-circle"></i>
-            <span><?= $_SESSION['error']; unset($_SESSION['error']); ?></span>
+            <span><?= $_SESSION['error'];
+            unset($_SESSION['error']); ?></span>
         </div>
     <?php endif; ?>
 </div>
 <!--Danh sách đơn hàng-->
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark text-uppercase">QUẢN LÝ ĐẶT HÀNG</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row gap-2">
+        <div class="text-uppercase fw-bold mb-0">
+            <h2 class="fw-bold text-dark text-uppercase">QUẢN LÝ ĐẶT HÀNG</h2>
+        </div>
+        <!-- Thanh điều hướng -->
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="index.php?action=dashboard" class="btn btn-outline-success">Dashboard</a>
+            <a href="index.php?action=product_management" class="btn btn-outline-success">Sản phẩm</a>
+            <a href="index.php?action=order_lists" class="btn btn-success">Đơn hàng</a>
+            <a href="index.php?action=account_management" class="btn btn-outline-success">Quản Lý Tài Khoản</a>
+            <a href="index.php?action=banner_sale" class="btn btn-outline-success">Banner & Sale</a>
+        </div>
     </div>
-
     <div class="table-responsive shadow-sm rounded">
         <!--Bảng hiển thị các đơn hàng-->
         <table class="table table-hover align-middle bg-white mb-2">
@@ -56,14 +67,24 @@
                                 $st = $status_map[$row['status']] ?? $status_map[0];
                                 ?>
                                 <span class="badge-status <?= $st['class'] ?>"><?= $st['text'] ?></span>
+                                <?php
+                                // Kiểm tra có sản phẩm hết hàng trong đơn
+                                $orderModel = new M_Cart();
+                                $orderItems = $orderModel->getOrderItems($row['id_order']);
+                                if (!empty($orderItems)) {
+                                    foreach ($orderItems as $item) {
+                                        $product = $orderModel->getProductStock($item['id_product']);
+                                        if ($product && isset($product['stock']) && (int) $product['stock'] <= 0) {
+                                            echo '<span class="badge bg-danger ms-2 align-middle">⚠ Hết hàng</span>';
+                                            break;
+                                        }
+                                    }
+                                }
+                                ?>
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-warning fw-bold text-white px-3"
-                                            data-bs-toggle="dropdown">
-                                            Sửa
-                                        </button>
                                         <ul class="dropdown-menu shadow-sm border-0">
                                             <li>
                                                 <form action="index.php?action=update_status" method="POST">
@@ -91,7 +112,15 @@
                                         </ul>
                                     </div>
 
-                                    <button class="btn btn-sm btn-danger fw-bold px-3"
+                                    <a href="index.php?action=order_detail&id=<?= $row['id_order'] ?>&return=order_lists"
+                                        class="btn btn-sm btn-primary fw-bold text-white text-center" style="min-width: 120px;">
+                                        Xem chi tiết
+                                    </a>
+                                    <button class="btn btn-sm btn-warning fw-bold text-white text-center"
+                                        style="min-width: 120px;" data-bs-toggle="dropdown">
+                                        Sửa
+                                    </button>
+                                    <button class="btn btn-sm btn-danger fw-bold text-center" style="min-width: 120px;"
                                         onclick="openDeleteOrderModal(<?= $row['id_order'] ?>)">
                                         Xóa
                                     </button>

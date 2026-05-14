@@ -8,7 +8,13 @@
                 <i class="far fa-calendar-alt"></i> Ngày đặt: <?= date("d/m/Y H:i", strtotime($order['created_at'])) ?>
             </p>
         </div>
-        <a href="index.php?action=my_orders" class="btn btn-outline-secondary fw-bold shadow-sm">
+        <?php
+        $returnAction = 'my_orders';
+        if (isset($_GET['return']) && $_GET['return'] === 'order_lists') {
+            $returnAction = 'order_lists';
+        }
+        ?>
+        <a href="index.php?action=<?= $returnAction ?>" class="btn btn-outline-secondary fw-bold shadow-sm">
             <i class="fas fa-chevron-left"></i> QUAY LẠI
         </a>
     </div>

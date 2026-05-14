@@ -43,11 +43,12 @@
         new bootstrap.Modal(document.getElementById('modalDeleteOrder')).show();
     }
     //Upload dữ liệu sản phẩm
-    function openEditModal(id, name, category, price, description, image) {
+    function openEditModal(id, name, category, price, stock, description, image) {
         document.getElementById("edit_id").value = id;
         document.getElementById("edit_name").value = name;
         document.getElementById("edit_category").value = category;
         document.getElementById("edit_price").value = price;
+        document.getElementById("edit_stock").value = stock;
         document.getElementById("edit_description").value = description;
         //Hiển thị ảnh cũ
         document.getElementById("old_image").src = "assets/images/image_products/" + image;
@@ -182,14 +183,14 @@
     document.addEventListener('DOMContentLoaded', function () {
         const alerts = document.querySelectorAll('.alert-box');
         alerts.forEach(alert => {
-            //Sau 3 giây sẽ thêm class fade-out để chạy hiệu ứng biến mất
+            //Sau 2 giây sẽ thêm class fade-out để chạy hiệu ứng biến mất
             setTimeout(() => {
                 alert.classList.add('fade-out');
                 //Sau khi hiệu ứng chạy xong (0.5s) thì xóa hẳn khỏi HTML
                 setTimeout(() => {
                     alert.remove();
                 }, 500);
-            }, 3000);
+            }, 2000);
         });
     });
     //Hàm validate form checkout
@@ -356,7 +357,22 @@
             textName.textContent = name;
         });
     });
+    //Hàm set dữ liệu cho Modal thay đổi role và mật khẩu
+    function setRoleData(userId, currentRole, username) {
+        document.getElementById('roleUserId').value = userId;
+        document.getElementById('roleSelect').value = currentRole;
+        document.getElementById('roleUsername').textContent = username;
+    }
+    //Hàm set dữ liệu cho Modal thay đổi mật khẩu
+    function setPasswordData(userId, username) {
+        document.getElementById('passwordUserId').value = userId;
+        document.getElementById('passwordUsername').textContent = username;
+    }
+    
 }
+
+
+
 
 
 

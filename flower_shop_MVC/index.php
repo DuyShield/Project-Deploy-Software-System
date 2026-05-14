@@ -18,6 +18,12 @@ switch ($action) {
     case 'product':
         $product->home_product();
         break;
+    case 'filter_by_category':
+        $product->filter_by_category();
+        break;
+    case "filter_products":
+        $product->filter_products();
+        break;
     case 'contact':
         $user->contact();
         break;
@@ -76,6 +82,12 @@ switch ($action) {
     case "my_orders":
         $user->my_orders();
         break;
+    case "add_wishlist":
+        $user->add_wishlist();
+        break;
+    case "my_wishlist":
+        $user->my_wishlist();
+        break;
     case "order_detail":
         $user->order_detail();
         break;
@@ -85,27 +97,40 @@ switch ($action) {
     case "write_review":
         $product->review_page();
         break;
-    case "my_wishlist":
-        $user->view_wishlist();
+    case "profile":
+        $user->profile();
         break;
-    case "add_wishlist":
-        $user->add_wishlist();
+    case "update_profile_info":
+        $user->update_profile_info();
         break;
-    case "remove_wishlist":
-        $user->remove_wishlist();
+    case "update_avatar":
+        $user->update_avatar();
         break;
+    case "change_password":
+        $user->change_password();
+        break;
+    case "dashboard":
     case "product_management":
     case "search_product_management":
     case "save_product":
     case "del_product":
     case "up_product":
+    case "save_home_settings":
     case "contact_list":
     case "order_lists":
     case "update_status":
     case "delete_order":
     case "send_reply":
     case "delete_contact":
+    case "account_management":
+    case "change_user_role":
+    case "change_user_password":
+    case "view_login_history":
+    case "banner_sale":
         $admin = new C_Admin();
+        // Xử lý các action khác
+        if ($action == "dashboard")
+            $admin->dashboard();
         if ($action == "product_management")
             $admin->product_management();
         if ($action == "search_product_management")
@@ -116,6 +141,8 @@ switch ($action) {
             $admin->del_product();
         if ($action == "up_product")
             $admin->update_product();
+        if ($action == "save_home_settings")
+            $admin->save_home_settings();
         if ($action == "contact_list")
             $admin->contact_list();
         if ($action == "order_lists")
@@ -128,6 +155,16 @@ switch ($action) {
             $admin->send_reply();
         if ($action == "delete_contact")
             $admin->delete_contact();
+        if ($action == "account_management")
+            $admin->account_management();
+        if ($action == "change_user_role")
+            $admin->change_user_role();
+        if ($action == "change_user_password")
+            $admin->change_user_password();
+        if ($action == "view_login_history")
+            $admin->view_login_history();
+        if ($action == "banner_sale")
+            $admin->banner_sale();
         break;
     default:
         echo "404 Not Found";

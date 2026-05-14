@@ -8,14 +8,22 @@ class C_Product
     {
         $model = new M_Product();
         $products = $model->getAllProducts();
+        $homeSettings = $model->getHomeSettings();
+        $saleProduct = null;
+        if (!empty($homeSettings['sale_product_id'])) {
+            $saleProduct = $model->getProductById((int)$homeSettings['sale_product_id']);
+        }
         include "views/home.php";
     }
     //Trang hiển thị tất cả sản phẩm
     public function home_product()
     {
         $model = new M_Product();
+        $categoryModel = new M_Category();
         $products = $model->getAllProducts();
+        $categories = $categoryModel->getAllCategories();
         $hideBanner = true;
+        $showFilters = true;
         include "views/home.php";
     }
     //Trang chi tiết sản phẩm
@@ -25,22 +33,78 @@ class C_Product
         $model = new M_Product();
         $product = $model->getProductById($id);
         $comments = $model->getCommentsByProduct($id);
+        
+        // Lấy thông tin đánh giá
+        $ratingInfo = $model->getAverageRating($id);
+        $starStats = $model->getStarStats($id);
+        $totalReviews = $ratingInfo['total_reviews'];
+        
+        $userComment = null;
+        $userReviewed = false;
+        
         if (isset($_SESSION['user'])) {
             $userId = $_SESSION['user']['id'];
             $hasPurchased = $model->checkUserPurchased($userId, $id);
+            $userReviewed = $model->checkUserReviewed($id, $userId);
+            $userComment = $model->getUserComment($id, $userId);
         }
         include "views/product_detail.php";
+    }
+    //Lọc sản phẩm theo danh mục
+    public function filter_by_category()
+    {
+        $model = new M_Product();
+        $categoryModel = new M_Category();
+        $categories = $categoryModel->getAllCategories();
+        
+        $id_category = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
+        
+        if ($id_category) {
+            $products = $model->getProductsByCategory($id_category);
+            $categoryName = array_filter($categories, fn($c) => $c['id_category'] == $id_category);
+            $categoryName = !empty($categoryName) ? reset($categoryName)['name_category'] : 'Danh mục';
+        } else {
+            $products = $model->getAllProducts();
+            $categoryName = '';
+        }
+        
+        $hideBanner = true;
+        $isFilter = true;
+        $showFilters = true;
+        include "views/home.php";
+    }
+    //Lọc sản phẩm nâng cao (danh mục, giá, trạng thái)
+    public function filter_products()
+    {
+        $model = new M_Product();
+        $categoryModel = new M_Category();
+        $categories = $categoryModel->getAllCategories();
+        
+        $category = isset($_GET['category']) ? $_GET['category'] : null;
+        $price_min = isset($_GET['price_min']) ? $_GET['price_min'] : null;
+        $price_max = isset($_GET['price_max']) ? $_GET['price_max'] : null;
+        $stock_status = isset($_GET['stock_status']) ? $_GET['stock_status'] : null;
+        
+        $products = $model->searchProducts(null, $category, $price_min, $price_max, $stock_status);
+        
+        $hideBanner = true;
+        $isFilter = true;
+        $showFilters = true;
+        include "views/home.php";
     }
     //Trang tìm kiếm sản phẩm
     public function search()
     {
         $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : "";
         $model = new M_Product();
+        $categoryModel = new M_Category();
         $products = $model->searchProducts($keyword);
+        $categories = $categoryModel->getAllCategories(); // Thêm categories để hiển thị bộ lọc
         $isSearch = true;
+        $showFilters = true;
         include "views/home.php";
     }
-    // 1. Hiển thị trang viết đánh giá
+    // Hiển thị trang viết đánh giá
     public function write_review()
     {
         $id_product = $_GET['id_product'];

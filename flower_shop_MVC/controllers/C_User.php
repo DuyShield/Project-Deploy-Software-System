@@ -78,6 +78,15 @@ class C_User
                 // Lưu Session chính
                 $_SESSION['user'] = $user;
                 $_SESSION['role'] = $role;
+
+                // Lưu lịch sử đăng nhập
+                $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+                $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+                $this->model->insertLoginHistory($user['id'], $ip, $userAgent);
+
+                // Cập nhật last_login_at
+                $this->model->updateLastLogin($user['id']);
+
                 // Xử lý Remember Me
                 if (isset($_POST['remember'])) {
                     $token = bin2hex(random_bytes(32));
@@ -92,8 +101,10 @@ class C_User
                 }
                 // Chuyển hướng theo Role
                 if ($role === "admin") {
+                    $_SESSION['success'] = "Đăng nhập thành công!";
                     header("Location: index.php?action=product_management");
                 } else {
+                    $_SESSION['success'] = "Đăng nhập thành công!";
                     header("Location: index.php?action=home");
                 }
                 exit();
@@ -188,6 +199,214 @@ class C_User
 
         include "views/my_orders.php";
     }
+    //Hiển thị trang thông tin cá nhân
+    public function profile()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+        $user_id = $_SESSION['user']['id'];
+        $user = $this->model->getAccountById($user_id);
+        include "views/profile.php";
+    }
+
+    //Cập nhật thông tin cá nhân (tên, email)
+    public function update_profile_info()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $user_id = $_SESSION['user']['id'];
+            $username = trim($_POST['username']);
+            $email = trim($_POST['email']);
+
+            if (empty($username) || empty($email)) {
+                $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['error'] = "Email không hợp lệ!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            // Kiểm tra username trùng
+            $existingUser = $this->model->getAccountByName($username);
+            if ($existingUser && $existingUser['id'] != $user_id) {
+                $_SESSION['error'] = "Tên đăng nhập đã tồn tại!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            // Cập nhật profile (không có avatar)
+            $result = $this->model->updateProfile($user_id, $username, $email, null);
+            if ($result) {
+                // Cập nhật session
+                $_SESSION['user']['username'] = $username;
+                $_SESSION['user']['email'] = $email;
+                $_SESSION['success'] = "Cập nhật thông tin thành công!";
+            } else {
+                $_SESSION['error'] = "Có lỗi xảy ra khi cập nhật!";
+            }
+
+            header("Location: index.php?action=profile");
+            exit();
+        }
+    }
+
+    //Cập nhật avatar
+    public function update_avatar()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $user_id = $_SESSION['user']['id'];
+
+            if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] != 0) {
+                $_SESSION['error'] = "Vui lòng chọn file avatar!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            $file = $_FILES['avatar'];
+            $file_size = $file['size'];
+            $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
+
+            if ($file_size > 5 * 1024 * 1024) { // 5MB
+                $_SESSION['error'] = "Kích thước file không được vượt quá 5MB!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            if (!in_array($file_ext, $allowed_ext)) {
+                $_SESSION['error'] = "Chỉ chấp nhận file JPG, PNG, GIF!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            // Xóa avatar cũ nếu không phải mặc định
+            $currentUser = $this->model->getAccountById($user_id);
+            if ($currentUser && $currentUser['avatar'] && $currentUser['avatar'] != 'default.jpg') {
+                $oldAvatarPath = $_SERVER['DOCUMENT_ROOT'] . "/assets/images/image_avatar_users/" . $currentUser['avatar'];
+                if (file_exists($oldAvatarPath)) {
+                    unlink($oldAvatarPath);
+                }
+            }
+
+            // Upload avatar mới
+            $new_avatar_name = uniqid() . "_" . time() . "." . $file_ext;
+            $target = $_SERVER['DOCUMENT_ROOT'] . "/assets/images/image_avatar_users/" . $new_avatar_name;
+
+            if (move_uploaded_file($file['tmp_name'], $target)) {
+                // Cập nhật chỉ avatar
+                $result = $this->model->updateProfile($user_id, null, null, $new_avatar_name);
+                if ($result) {
+                    // Cập nhật session
+                    $_SESSION['user']['avatar'] = $new_avatar_name;
+                    $_SESSION['success'] = "Cập nhật avatar thành công!";
+                } else {
+                    $_SESSION['error'] = "Có lỗi xảy ra khi cập nhật avatar!";
+                }
+            } else {
+                $_SESSION['error'] = "Lỗi upload avatar!";
+            }
+
+            header("Location: index.php?action=profile");
+            exit();
+        }
+    }
+
+    //Đổi mật khẩu
+    public function change_password()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $user_id = $_SESSION['user']['id'];
+            $current_password = $_POST['current_password'];
+            $new_password = $_POST['new_password'];
+            $confirm_password = $_POST['confirm_password'];
+
+            if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
+                $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+            if ($new_password !== $confirm_password) {
+                $_SESSION['error'] = "Mật khẩu mới không khớp!";
+                header("Location: index.php?action=profile");
+                exit();
+            }
+
+        // Kiểm tra độ dài mật khẩu
+        if (strlen($new_password) < 8) {
+            $_SESSION['error'] = "Mật khẩu mới phải có ít nhất 8 ký tự!";
+            header("Location: index.php?action=profile");
+            exit();
+        }
+
+        // Kiểm tra mật khẩu có chứa cả chữ và số
+        if (!preg_match('/^(?=.*[a-zA-Z])(?=.*\d)/', $new_password)) {
+            $_SESSION['error'] = "Mật khẩu mới phải bao gồm cả chữ cái và số!";
+            header("Location: index.php?action=profile");
+            exit();
+        }
+
+        // Kiểm tra mật khẩu hiện tại
+        $user = $this->model->getAccountById($user_id);
+        if (!$user || !password_verify($current_password, $user['password'])) {
+            $_SESSION['error'] = "Mật khẩu hiện tại không đúng!";
+            header("Location: index.php?action=profile");
+            exit();
+        }
+
+        // Kiểm tra mật khẩu mới không trùng với mật khẩu hiện tại
+        if (password_verify($new_password, $user['password'])) {
+            $_SESSION['error'] = "Mật khẩu mới không được trùng với mật khẩu hiện tại!";
+            header("Location: index.php?action=profile");
+            exit();
+        }
+
+        // Cập nhật mật khẩu
+        $result = $this->model->updatePassword($user_id, $new_password);
+        if ($result) {
+            $_SESSION['success'] = "Đổi mật khẩu thành công!";
+        } else {
+            $_SESSION['error'] = "Có lỗi xảy ra khi đổi mật khẩu!";
+        }
+
+            header("Location: index.php?action=profile");
+            exit();
+        }
+    }
+    
+
     //Hiển thị chi tiết đơn hàng
     public function order_detail()
     {
@@ -196,14 +415,32 @@ class C_User
             exit();
         }
 
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+
         $id_order = $_GET['id'];
         $cartModel = new M_Cart();
 
         $order = $cartModel->getOrderById($id_order);
 
-        if (!$order || $order['id_account'] != $_SESSION['user']['id']) {
+        if (!$order) {
+            die("Đơn hàng không tồn tại!");
+        }
+
+        $userRole = $_SESSION['user']['role'] ?? $_SESSION['role'] ?? null;
+        $isOwner = ($order['id_account'] == $_SESSION['user']['id']);
+        $isAdmin = ($userRole === 'admin');
+
+        if (!$isOwner && !$isAdmin) {
             die("Bạn không có quyền xem đơn hàng này!");
         }
+
         $isDelivered = ($order['status'] == 2);
         $totalColumns = $isDelivered ? 5 : 4;
         $items = $cartModel->getOrderItems($id_order);
@@ -223,36 +460,82 @@ class C_User
             $result = $commentModel->insertComment($id_product, $id_user, $content, $rating, $id_order);
 
             if ($result) {
-                // Lưu thành công thì quay về trang chi tiết đơn hàng
-                header("Location: index.php?action=order_detail&id=" . $id_order);
+                // Kiểm tra xem user đã review trước đó chưa
+                if ($commentModel->getUserComment($id_product, $id_user)) {
+                    $_SESSION['success'] = "Đánh giá của bạn đã được cập nhật thành công!";
+                } else {
+                    $_SESSION['success'] = "Cảm ơn bạn đã đánh giá sản phẩm này!";
+                }
+                // Quay về trang chi tiết sản phẩm
+                header("Location: index.php?action=detail&id=" . $id_product);
             } else {
-                echo "Có lỗi xảy ra khi gửi bình luận.";
+                $_SESSION['error'] = "Có lỗi xảy ra khi gửi bình luận.";
+                header("Location: index.php?action=detail&id=" . $id_product);
             }
+            exit();
         }
     }
     //Thêm sản phẩm vào yêu thích
     public function add_wishlist()
     {
+        // Kiểm tra session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Kiểm tra user đã đăng nhập
+        if (!isset($_SESSION['user']) || empty($_SESSION['user']['id'])) {
+            $_SESSION['error'] = "Vui lòng đăng nhập để thêm vào danh sách yêu thích!";
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $id_product = $_POST['id_product'];
-            $id_account = $_SESSION['user']['id'];
+            // Validate input
+            if (!isset($_POST['id_product']) || empty($_POST['id_product'])) {
+                $_SESSION['error'] = "Dữ liệu không hợp lệ. Vui lòng thử lại.";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
+
+            $id_product = (int)$_POST['id_product'];
+            $id_account = (int)$_SESSION['user']['id'];
             $model = new M_User();
 
-            if ($model->addWishlist($id_account, $id_product)) {
-                // Gửi trạng thái thành công
+            // Kiểm tra sản phẩm tồn tại
+            if ($id_product <= 0) {
+                $_SESSION['error'] = "Dữ liệu không hợp lệ. Vui lòng thử lại.";
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
+
+            $result = $model->addWishlist($id_account, $id_product);
+            
+            if ($result) {
                 $_SESSION['success'] = "Đã thêm vào danh sách yêu thích!";
             } else {
-                // Gửi trạng thái thất bại
-                $_SESSION['error'] = "Có lỗi xảy ra, vui lòng thử lại.";
+                $_SESSION['error'] = "Sản phẩm này đã có trong danh sách yêu thích hoặc có lỗi xảy ra.";
             }
             header("Location: " . $_SERVER['HTTP_REFERER']);
             exit();
         }
     }
     //Xem sản phẩm yêu thích
-    public function view_wishlist()
+    public function my_wishlist()
     {
-        $userId = $_SESSION['user']['id'];
+        // Kiểm tra session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Kiểm tra user đã đăng nhập
+        if (!isset($_SESSION['user']) || empty($_SESSION['user']['id'])) {
+            $_SESSION['error'] = "Vui lòng đăng nhập để xem danh sách yêu thích!";
+            header("Location: index.php?action=login");
+            exit();
+        }
+
+        $userId = (int)$_SESSION['user']['id'];
         $model = new M_User();
         $items = $model->getWishlistByUser($userId);
         include "views/wishlist.php";
@@ -260,19 +543,44 @@ class C_User
     //Xóa sản phẩm khỏi yêu thích
     public function remove_wishlist()
     {
+        // Kiểm tra session
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Kiểm tra user đã đăng nhập
+        if (!isset($_SESSION['user']) || empty($_SESSION['user']['id'])) {
+            $_SESSION['error'] = "Vui lòng đăng nhập!";
+            header("Location: index.php?action=login");
+            exit();
+        }
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $id_product = $_POST['id_product']; // Nhận từ input hidden trong modal
-            $id_account = $_SESSION['user']['id'];
+            // Validate input
+            if (!isset($_POST['id_product']) || empty($_POST['id_product'])) {
+                $_SESSION['error'] = "Dữ liệu không hợp lệ.";
+                header("Location: index.php?action=my_wishlist");
+                exit();
+            }
+
+            $id_product = (int)$_POST['id_product'];
+            $id_account = (int)$_SESSION['user']['id'];
+
+            if ($id_product <= 0 || $id_account <= 0) {
+                $_SESSION['error'] = "Dữ liệu không hợp lệ.";
+                header("Location: index.php?action=my_wishlist");
+                exit();
+            }
 
             $model = new M_User();
 
             if ($model->removeWishlist($id_account, $id_product)) {
                 $_SESSION['success'] = "Sản phẩm đã được xóa khỏi danh sách yêu thích!";
-                header("Location: index.php?action=view_wishlist&status=success");
+                header("Location: index.php?action=my_wishlist");
                 exit();
             } else {
                 $_SESSION['error'] = "Có lỗi xảy ra khi xóa sản phẩm khỏi danh sách yêu thích.";
-                header("Location: index.php?action=view_wishlist&status=error");
+                header("Location: index.php?action=my_wishlist");
                 exit();
             }
         }

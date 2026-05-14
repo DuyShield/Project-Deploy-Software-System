@@ -118,6 +118,13 @@ class M_Cart
         $sql = "DELETE FROM carts WHERE id_account = ?";
         return $this->db->execute($sql, "i", [$id_account]);
     }
+    //Lấy thông tin stock của sản phẩm
+    public function getProductStock($id_product)
+    {
+        $sql = "SELECT id_product, stock FROM products WHERE id_product = ?";
+        $result = $this->db->select($sql, "i", [$id_product]);
+        return !empty($result) ? $result[0] : null;
+    }
     //Lấy tất cả đơn hàng
     public function getAllOrders()
     {

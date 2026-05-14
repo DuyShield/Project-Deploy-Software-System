@@ -41,7 +41,7 @@
                                             style="width: 70px; height: 70px; object-fit: cover;">
                                         <div class="ms-3">
                                             <h6 class="mb-0 fw-bold"><?= $item['name_product'] ?></h6>
-                                            <small class="text-muted">Phân loại: Hoa tươi</small>
+                                            <small class="text-muted">Phân loại: <?= $item['name_category'] ?? $item['id_category'] ?></small>
                                         </div>
                                     </div>
                                 </td>

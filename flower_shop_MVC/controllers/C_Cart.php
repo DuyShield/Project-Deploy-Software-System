@@ -8,7 +8,7 @@ class C_Cart
             session_start();
         }
     }
-    //
+    //Hiển thị giỏ hàng
     public function cart()
     {
         $cartItems = [];
