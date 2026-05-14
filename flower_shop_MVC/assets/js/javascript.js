@@ -337,6 +337,7 @@
                 });
         });
     });
+<<<<<<< HEAD
     //Xử lý sự kiện show của Modal xóa wishlist
     document.addEventListener('DOMContentLoaded', function () {
         const modalDelete = document.getElementById('modalDelete');
@@ -369,10 +370,15 @@
         document.getElementById('passwordUsername').textContent = username;
     }
     
+=======
+>>>>>>> flower-shop
 }
 
 
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> flower-shop

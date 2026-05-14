@@ -112,6 +112,7 @@
                                         </ul>
                                     </div>
 
+<<<<<<< HEAD
                                     <a href="index.php?action=order_detail&id=<?= $row['id_order'] ?>&return=order_lists"
                                         class="btn btn-sm btn-primary fw-bold text-white text-center" style="min-width: 120px;">
                                         Xem chi tiết
@@ -121,6 +122,9 @@
                                         Sửa
                                     </button>
                                     <button class="btn btn-sm btn-danger fw-bold text-center" style="min-width: 120px;"
+=======
+                                    <button class="btn btn-sm btn-danger fw-bold px-3"
+>>>>>>> flower-shop
                                         onclick="openDeleteOrderModal(<?= $row['id_order'] ?>)">
                                         Xóa
                                     </button>

@@ -1,16 +1,25 @@
 <?php require "views/layout/header.php"; ?>
+<<<<<<< HEAD
 <!-- Trang hiển thị form thanh toán khi khách hàng tiến hành đặt hàng -->
+=======
+>>>>>>> flower-shop
 <form action="index.php?action=process_checkout" method="POST" onsubmit="return validateCheckout()">
     <div class="checkout-wrapper">
         <div class="checkout-form">
             <h2 class="section-title">THÔNG TIN GIAO HÀNG</h2>
+<<<<<<< HEAD
             <!-- Hiển thị lỗi nếu có -->
+=======
+>>>>>>> flower-shop
             <?php if (!empty($_SESSION['checkout_error'])): ?>
                 <div class="form-error" style="color: #d9534f; margin-bottom: 1rem;">
                     <?php echo $_SESSION['checkout_error']; unset($_SESSION['checkout_error']); ?>
                 </div>
             <?php endif; ?>
+<<<<<<< HEAD
             <!-- Form nhập thông tin giao hàng -->
+=======
+>>>>>>> flower-shop
             <div class="form-group">
                 <input type="text" name="name" placeholder="Họ và tên người nhận" class="input-control" required>
             </div>
@@ -56,6 +65,35 @@
                     <span class="payment-name">Chuyển khoản Ngân hàng (QR Code)</span>
                 </label>
             </div>
+<<<<<<< HEAD
+=======
+
+            <!-- QR Code cho chuyển khoản -->
+            <div id="qr-code-section" class="qr-code-card" style="display: none;">
+                <div class="qr-card-header">
+                    <div>
+                        <h3>Chuyển khoản ngân hàng</h3>
+                        <p>Quét mã QR hoặc chuyển khoản theo thông tin bên dưới.</p>
+                    </div>
+                </div>
+                <div class="qr-card-body">
+                    <div class="qr-image-wrapper">
+                        <img src="/assets/images/image_qr/QR_code.png" alt="QR Code chuyển khoản">
+                    </div>
+                    <div class="qr-bank-details">
+                        <div class="detail-row"><span>Ngân hàng:</span><strong>TPBank</strong></div>
+                        <div class="detail-row"><span>Số tài khoản:</span><strong>00002491268</strong></div>
+                        <div class="detail-row"><span>Chủ tài khoản:</span><strong>Flower Shop</strong></div>
+                        <div class="detail-row"><span>Số tiền:</span><strong id="qr-amount"><?php echo number_format($total); ?> đ</strong></div>
+                        <div class="detail-row"><span>Nội dung:</span><strong>Thanh toan don hang</strong></div>
+                    </div>
+                </div>
+                <div class="qr-card-footer">
+                    <p>Vui lòng chụp ảnh biên nhận sau khi chuyển khoản và gửi lại cho chúng tôi để xác nhận đơn hàng.</p>
+                </div>
+            </div>
+        </div>
+>>>>>>> flower-shop
 
             <!-- QR Code cho chuyển khoản -->
             <div id="qr-code-section" class="qr-code-card" style="display: none;">
