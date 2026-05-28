@@ -94,13 +94,101 @@ class M_User
         $sql = "UPDATE contacts SET reply = ? WHERE id = ?";
         return $this->db->execute($sql, "si", [$reply, $id]);
     }
+
+    // Thêm thông báo mới
+    public function addNotification($title, $content, $notificationType = 'global', $targetUserId = null, $severity = 'info')
+    {
+        $notificationType = in_array($notificationType, ['global', 'personal']) ? $notificationType : 'global';
+        $severity = in_array($severity, ['info', 'warning', 'danger', 'success']) ? $severity : 'info';
+        $hasSeverityColumn = !empty($this->db->select("SHOW COLUMNS FROM notifications LIKE 'severity'"));
+
+        // Thông báo global cho toàn bộ hệ thống
+        if ($notificationType === 'global' || $targetUserId === null) {
+            // Xóa các thông báo global cũ trước khi thêm
+            $this->db->execute("DELETE FROM notifications WHERE type = 'global'");
+
+            // Thêm thông báo global mới
+            if ($hasSeverityColumn) {
+                $insertSql = "INSERT INTO notifications (user_id, title, content, type, severity, is_read, created_at) VALUES (NULL, ?, ?, 'global', ?, 0, NOW())";
+                return $this->db->execute($insertSql, "sss", [$title, $content, $severity]);
+            } else {
+                $insertSql = "INSERT INTO notifications (user_id, title, content, type, is_read, created_at) VALUES (NULL, ?, ?, 'global', 0, NOW())";
+                $contentWithSeverity = "[severity:$severity]" . $content;
+                return $this->db->execute($insertSql, "ss", [$title, $contentWithSeverity]);
+            }
+        }
+
+        // Thông báo cá nhân cho user cụ thể
+        if ($hasSeverityColumn) {
+            $sql = "INSERT INTO notifications (user_id, title, content, type, severity, is_read, created_at) VALUES (?, ?, ?, 'personal', ?, 0, NOW())";
+            return $this->db->execute($sql, "issss", [$targetUserId, $title, $content, $severity]);
+        } else {
+            $sql = "INSERT INTO notifications (user_id, title, content, type, is_read, created_at) VALUES (?, ?, ?, ?, 0, NOW())";
+            $contentToSave = "[severity:$severity]" . $content;
+            return $this->db->execute($sql, "isss", [$targetUserId, $title, $contentToSave, 'personal']);
+        }
+    }
+    // Lấy thông báo của user
+    public function getNotificationsForUser($userId, $limit = 10)
+    {
+        $sql = "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT ?";
+        return $this->db->select($sql, "ii", [$userId, $limit]);
+    }
+
+    // Lấy thông báo global cho user (dùng khi hiển thị ở trang home)
+    public function getGlobalNotificationsForUser($userId = null, $limit = 5)
+    {
+        if ($userId !== null) {
+            // Nếu ĐÃ đăng nhập: Lấy thông báo global chung (user_id IS NULL)
+            $sql = "SELECT * FROM notifications 
+                WHERE (user_id = ? OR user_id IS NULL) AND type = 'global' 
+                ORDER BY created_at DESC LIMIT ?";
+            return $this->db->select($sql, "ii", [$userId, $limit]);
+        } else {
+            // Nếu CHƯA đăng nhập: Chỉ lấy những thông báo global công khai (user_id là NULL)
+            $sql = "SELECT * FROM notifications 
+                WHERE user_id IS NULL AND type = 'global' 
+                ORDER BY created_at DESC LIMIT ?";
+            return $this->db->select($sql, "i", [$limit]);
+        }
+    }
+    // Lấy tổng số thông báo của user
+    public function getNotificationCount($userId)
+    {
+        $sql = "SELECT COUNT(*) AS count FROM notifications WHERE user_id = ?";
+        $result = $this->db->select($sql, "i", [$userId]);
+        return !empty($result) ? (int)$result[0]['count'] : 0;
+    }
+    // Lấy số lượng thông báo chưa đọc của user
+    public function getUnreadNotificationCount($userId)
+    {
+        $sql = "SELECT COUNT(*) AS count FROM notifications WHERE user_id = ? AND is_read = 0";
+        $result = $this->db->select($sql, "i", [$userId]);
+        return !empty($result) ? (int)$result[0]['count'] : 0;
+    }
+    // Đánh dấu tất cả thông báo của user là đã đọc
+    public function markNotificationsRead($userId)
+    {
+        $sql = "UPDATE notifications SET is_read = 1 WHERE user_id = ?";
+        return $this->db->execute($sql, "i", [$userId]);
+    }
+
+    public function getWishlistUsersByProduct($productId)
+    {
+        $sql = "SELECT DISTINCT a.id FROM accounts a 
+                JOIN wishlists w ON a.id = w.id_account 
+                WHERE w.id_product = ?";
+        $result = $this->db->select($sql, "i", [$productId]);
+        return array_column($result, 'id');
+    }
+
     // Lưu bình luận mới
     public function insertComment($id_product, $id_user, $content, $rating, $id_order)
     {
         // Kiểm tra xem user đã comment sản phẩm này chưa
         $checkSql = "SELECT id_product FROM comments WHERE id_product = ? AND id_account = ?";
         $checkResult = $this->db->select($checkSql, "ii", [$id_product, $id_user]);
-        
+
         if (!empty($checkResult)) {
             // Nếu đã comment rồi thì cập nhật
             return $this->updateComment($id_product, $id_user, $content, $rating);
@@ -131,12 +219,12 @@ class M_User
         // Kiểm tra xem sản phẩm này đã có trong wishlist chưa
         $checkSql = "SELECT id_wishlist FROM wishlists WHERE id_account = ? AND id_product = ?";
         $result = $this->db->select($checkSql, "ii", [$userId, $productId]);
-        
+
         // Nếu đã tồn tại, không thêm
         if (!empty($result)) {
             return false; // Trả về false vì đã tồn tại
         }
-        
+
         // Nếu chưa tồn tại, thêm mới
         $sql = "INSERT INTO wishlists (id_account, id_product) VALUES (?, ?)";
         return $this->db->execute($sql, "ii", [$userId, $productId]);
@@ -160,12 +248,13 @@ class M_User
     }
 
     // Cập nhật thông tin profile
-    public function updateProfile($userId, $username = null, $email = null, $avatar = null)
+    public function updateProfile($userId, $username = null, $email = null, $avatar = null, $phone = null, $date_of_birth = null)
     {
+        // UPDATE động dựa trên những trường có giá trị mới
         $setParts = [];
         $types = "";
         $params = [];
-
+        // Chỉ thêm vào câu lệnh UPDATE những trường có giá trị mới (không null)
         if ($username !== null) {
             $setParts[] = "username = ?";
             $types .= "s";
@@ -176,6 +265,18 @@ class M_User
             $setParts[] = "email = ?";
             $types .= "s";
             $params[] = $email;
+        }
+
+        if ($phone !== null) {
+            $setParts[] = "phone = ?";
+            $types .= "s";
+            $params[] = $phone;
+        }
+
+        if ($date_of_birth !== null) {
+            $setParts[] = "date_of_birth = ?";
+            $types .= "s";
+            $params[] = $date_of_birth;
         }
 
         if ($avatar !== null) {

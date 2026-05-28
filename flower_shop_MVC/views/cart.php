@@ -3,11 +3,7 @@
 <!-- Trang hiển thị giỏ hàng của khách hàng -->
 <div class="container my-5">
     <h2 class="mb-4 fw-bold text-uppercase">Giỏ hàng</h2>
-<<<<<<< HEAD
     <!-- Hiển thị thông báo nếu có -->
-=======
-
->>>>>>> flower-shop
     <?php if (empty($cartItems)): ?>
         <div class="text-center py-5 border rounded bg-light">
             <p class="mb-3 text-secondary">Giỏ hàng của bạn hiện đang trống.</p>
@@ -35,10 +31,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-<<<<<<< HEAD
                                 <!-- Danh sách sản phẩm trong giỏ hàng sẽ được hiển thị ở đây -->
-=======
->>>>>>> flower-shop
                                 <?php foreach ($cartItems as $id => $item):
                                     //Xác định ID sản phẩm
                                     $productId = $item['id_product'] ?? $id;
@@ -61,51 +54,6 @@
                                                     <div class="fw-bold text-dark"><?php echo $item['name_product']; ?></div>
                                                     <div class="text-muted small">Đơn giá:
                                                         <?php echo number_format($item['price_product']); ?> đ</div>
-<<<<<<< HEAD
-=======
-
-                                                    <a href="index.php?action=remove_from_cart&id=<?php echo $productId; ?>"
-                                                        class="text-secondary small text-decoration-underline"
-                                                        onclick="return confirm('Xóa sản phẩm này?')">
-                                                        Xóa sản phẩm
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center">
-                                                <div class="d-inline-flex border align-items-center bg-white"
-                                                    style="height: 35px;">
-                                                    <a href="index.php?action=update_cart&id=<?php echo $productId; ?>&op=dec"
-                                                        class="btn btn-sm px-3 border-0 cart-qty-btn"
-                                                        data-id="<?php echo $productId; ?>" data-op="dec">-</a>
-
-                                                    <input type="text" value="<?php echo $item['quantity']; ?>"
-                                                        class="form-control form-control-sm text-center border-0 bg-transparent fw-bold cart-qty-value"
-                                                        style="width: 40px; padding: 0;" readonly>
-
-                                                    <a href="index.php?action=update_cart&id=<?php echo $productId; ?>&op=inc"
-                                                        class="btn btn-sm px-3 border-0 cart-qty-btn"
-                                                        data-id="<?php echo $productId; ?>" data-op="inc">+</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-end pe-0 fw-bold">
-                                            <span
-                                                class="item-total"><?php echo number_format($item['price_product'] * $item['quantity']); ?></span>
-                                            đ
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <a href="index.php" class="text-dark text-decoration-none small fw-bold">← TIẾP TỤC MUA SẮM</a>
-                        <button type="button" class="btn btn-link text-danger text-decoration-none small fw-bold p-0" data-bs-toggle="modal" data-bs-target="#modalClearCart">Xóa tất cả giỏ hàng</button>
-                    </div>
-            </div>
->>>>>>> flower-shop
 
                                                     <a href="index.php?action=remove_from_cart&id=<?php echo $productId; ?>"
                                                         class="text-secondary small text-decoration-underline"

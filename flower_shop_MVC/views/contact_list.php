@@ -23,6 +23,7 @@
             <div class="card mb-3 border-0 shadow-sm" style="background-color: #f9fdfa; border-radius: 12px;">
                 <div class="card-body">
                     <div class="row align-items-center">
+                        <!-- Thông tin khách hàng và trạng thái phản hồi -->
                         <div class="col-md-3 border-end">
                             <h6 class="fw-bold mb-1 text-dark"><?= $c['name'] ?></h6>
                             <p class="small text-muted mb-2"><?= $c['email'] ?></p>
@@ -30,7 +31,7 @@
                                 <?= empty($c['reply']) ? 'Chưa trả lời' : 'Đã trả lời' ?>
                             </span>
                         </div>
-
+                        <!-- Nội dung liên hệ và phản hồi (nếu có) -->
                         <div class="col-md-7 px-4">
                             <p class="mb-2"><strong>Khách viết:</strong> <?= nl2br($c['message']) ?></p>                           
                             <?php if (!empty($c['reply'])): ?>
@@ -41,7 +42,7 @@
                                 </div>
                             <?php endif; ?>
                         </div>
-
+                        <!-- Nút thao tác: Trả lời và Xóa -->
                         <div class="col-md-2 d-flex flex-column gap-2">
                             <button type="button" class="btn btn-success fw-bold text-white border-0 py-2 w-100"
                                     data-bs-toggle="modal" data-bs-target="#replyModal<?= $c['id'] ?>"

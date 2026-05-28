@@ -42,7 +42,7 @@
                 <div class="col-12 col-md-6 col-lg-3">
                     <label class="form-label">Từ khóa</label>
                     <input type="text" name="keyword" class="form-control" placeholder="Tên sản phẩm..."
-                        value="<?= isset($keyword) ? htmlspecialchars($keyword) : '' ?>">
+                        value="<?= isset($keyword) ? $keyword : '' ?>">
                 </div>
                 <!--Bộ lọc nâng cao-->
                 <div class="col-12 col-md-6 col-lg-3">
@@ -60,12 +60,12 @@
                 <div class="col-6 col-md-3 col-lg-2">
                     <label class="form-label">Giá từ</label>
                     <input type="number" name="price_min" class="form-control" min="0"
-                        value="<?= isset($price_min) ? htmlspecialchars($price_min) : '' ?>">
+                        value="<?= isset($price_min) ? $price_min : '' ?>">
                 </div>
                 <div class="col-6 col-md-3 col-lg-2">
                     <label class="form-label">Giá đến</label>
                     <input type="number" name="price_max" class="form-control" min="0"
-                        value="<?= isset($price_max) ? htmlspecialchars($price_max) : '' ?>">
+                        value="<?= isset($price_max) ? $price_max : '' ?>">
                 </div>
                 <div class="col-12 col-md-6 col-lg-2">
                     <label class="form-label">Tình trạng</label>

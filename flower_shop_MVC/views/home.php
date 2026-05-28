@@ -1,9 +1,49 @@
 <?php require "views/layout/header.php"; ?>
-<!-- Trang hiển thị danh sách sản phẩm trên trang chủ -->
+<!-- Hiển thị thông báo -->
+<div id="notification-container">
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert-box success">
+            <i class="fas fa-check-circle"></i>
+            <span><?= $_SESSION['success']; unset($_SESSION['success']); ?></span>
+        </div>
+    <?php endif; ?>
 
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="alert-box error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span><?= $_SESSION['error']; unset($_SESSION['error']); ?></span>
+        </div>
+    <?php endif; ?>
+</div>
+<!-- Trang hiển thị danh sách sản phẩm trên trang chủ -->
 <body>
     <?php if (!isset($isSearch) && empty($hideBanner)) { ?>
         <div class="container mt-4">
+            <?php if (isset($globalNotifications) && !empty($globalNotifications)): ?>
+                <div class="mb-4">
+                    <!-- Hiển thị thông báo global ở phần chính của trang chủ -->
+                    <h5 class="mb-3">Thông báo mới</h5>
+                    <?php foreach ($globalNotifications as $notif): ?>
+                        <?php
+                        $severity = $notif['severity'] ?? 'info';
+                        $content = $notif['content'];
+                        if (empty($notif['severity']) && preg_match('/^\[severity:(info|warning|danger|success)\](.*)$/s', $content, $matches)) {
+                            $severity = $matches[1];
+                            $content = $matches[2];
+                        }
+                        ?>
+                        <div class="alert alert-<?= $severity ?> rounded-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong><?= $notif['title'] ?></strong>
+                                    <p class="mb-1 small text-secondary"><?= $content ?></p>
+                                </div>
+                                <small class="text-muted"><?= $notif['created_at'] ?></small>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
             <div class="row g-2 g-md-3">
                 <!-- Main Banner -->
                 <div class="col-md-6 col-12">
@@ -13,7 +53,7 @@
                             $bannerList = $homeSettings['banners'] ?? ['main-banner.jpg', 'main-banner1.jpg', 'main-banner2.jpg'];
                             foreach ($bannerList as $index => $bannerImage):
                                 $activeClass = $index === 0 ? ' active' : '';
-                                $src = 'assets/images/image_banners/' . htmlspecialchars($bannerImage);
+                                $src = 'assets/images/image_banners/' . $bannerImage;
                             ?>
                                 <div class="carousel-item<?= $activeClass ?>">
                                     <img src="<?= $src ?>" class="d-block w-100 rounded" alt="Banner <?= $index + 1 ?>">
@@ -37,7 +77,7 @@
                     <?php $sideBanners = $homeSettings['side_banners'] ?? ['banner1.jpg', 'banner2.jpg']; ?>
                     <?php foreach ($sideBanners as $bannerImage): ?>
                         <div class="small-banner mb-3">
-                            <img src="assets/images/image_banners/<?= htmlspecialchars($bannerImage) ?>" class="img-fluid" alt="Side Banner">
+                            <img src="assets/images/image_banners/<?= $bannerImage ?>" class="img-fluid" alt="Side Banner">
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -49,8 +89,8 @@
                         </h5>
                         <?php if (!empty($saleProduct)): ?>
                             <div class="product">
-                                <img src="assets/images/image_products/<?= htmlspecialchars($saleProduct['image']) ?>" class="img-fluid img-banner-sale" alt="<?= htmlspecialchars($saleProduct['name_product']) ?>">
-                                <h6><?= htmlspecialchars($saleProduct['name_product']) ?></h6>
+                                <img src="assets/images/image_products/<?= $saleProduct['image'] ?>" class="img-fluid img-banner-sale" alt="<?= $saleProduct['name_product'] ?>">
+                                <h6><?= $saleProduct['name_product'] ?></h6>
                                 <div class="price">
                                     <span class="new"><?= number_format($saleProduct['price_product']) ?> đ</span>
                                     <?php if (isset($saleProduct['price_product']) && is_numeric($saleProduct['price_product'])): ?>
@@ -58,7 +98,8 @@
                                     <?php endif; ?>
                                 </div>
                                 <div class="rating">
-                                    ★ 5.0 (49)
+                                    ★ <?= number_format($saleProductRating['avg_rating'], 1) ?>
+                                    (<?= number_format($saleProductRating['total_reviews']) ?> đánh giá)
                                 </div>
                             </div>
                         <?php else: ?>
@@ -174,6 +215,19 @@
                 </div>
             <?php } ?>
         </div>
+
+        <?php if (isset($totalPages) && $totalPages > 1): ?>
+            <nav aria-label="Trang sản phẩm">
+                <ul class="pagination justify-content-center mt-4">
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <li class="page-item <?= (isset($page) && $page == $i) ? 'active' : '' ?>">
+                            <a class="page-link" href="index.php?action=home&page=<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+            </nav>
+        <?php endif; ?>
+
         <?php ?>
     </div>
     </div>

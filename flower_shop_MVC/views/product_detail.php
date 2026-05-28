@@ -115,7 +115,9 @@
                 <div class="card-body">
                     <!-- Thống kê chi tiết -->
                     <?php
+                    // Tính tổng số đánh giá để tính phần trăm
                     $totalStars = array_sum($starStats);
+                    // Hiển thị thống kê phần trăm cho từng mức sao
                     for ($i = 5; $i >= 1; $i--) {
                         $count = $starStats[$i] ?? 0;
                         $percentage = $totalStars > 0 ? round(($count / $totalStars) * 100) : 0;
@@ -214,8 +216,8 @@
                         </div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0 fw-bold"><?php echo htmlspecialchars($comment['username']); ?></h6>
-                        <small class="text-muted" style="font-size: 0.8rem;">
+                        <h6 class="mb-0 fw-bold"><?php echo $comment['username']; ?></h6>
+                        <small class="text-muted" style="font-size: 0.8rem;">   
                             <?php echo date("d/m/Y", strtotime($comment['created_at'])); ?>
                             <span class="badge bg-light text-success border ms-2">Đã mua hàng</span>
                         </small>

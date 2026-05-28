@@ -55,6 +55,9 @@ switch ($action) {
         $user_id = $_SESSION['user']['id'] ?? null;
         $user->contact_detail($user_id);
         break;
+    case "notifications":
+        $user->notifications();
+        break;
     case "cart":
         $cart->cart();
         break;
@@ -127,6 +130,8 @@ switch ($action) {
     case "change_user_password":
     case "view_login_history":
     case "banner_sale":
+    case "admin_notification_form":
+    case "send_notification":
         $admin = new C_Admin();
         // Xử lý các action khác
         if ($action == "dashboard")
@@ -165,6 +170,10 @@ switch ($action) {
             $admin->view_login_history();
         if ($action == "banner_sale")
             $admin->banner_sale();
+        if ($action == "admin_notification_form")
+            $admin->notification_form();
+        if ($action == "send_notification")
+            $admin->send_notification();
         break;
     default:
         echo "404 Not Found";

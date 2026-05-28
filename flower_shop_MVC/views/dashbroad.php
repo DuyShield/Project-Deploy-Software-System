@@ -4,7 +4,7 @@ require "views/layout/header.php";
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-start mb-4 flex-column flex-md-row gap-3">
         <div>
-            <h1 class="h2 fw-bold">Dashboard quản trị</h1>
+            <h1 class="h2 fw-bold">DASHBOARD QUẢN TRỊ</h1>
             <p class="text-muted mb-0">Tổng quan quản lý sản phẩm, giao hàng và kho hàng.</p>
         </div>
         <div class="d-flex gap-2 flex-wrap">
