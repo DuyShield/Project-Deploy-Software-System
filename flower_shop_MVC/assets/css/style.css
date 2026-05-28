@@ -98,7 +98,6 @@
     .checkout-wrapper {
         grid-template-columns: 1fr;
     }
-<<<<<<< HEAD
 
     .qr-card-body {
         grid-template-columns: 1fr;
@@ -147,11 +146,6 @@
 
 .profile-icon-container i {
     font-size: 1.1rem;
-=======
-    .qr-card-body {
-        grid-template-columns: 1fr;
-    }
->>>>>>> flower-shop
 }
 
 /*Design cho footer*/
@@ -204,7 +198,12 @@
     width: 100%;
     border-radius: 8px;
 }
-
+/* Title menu */
+@media (max-width: 400px) {
+    .disabled {
+        display: none !important;
+    }
+}
 /* Responsive navbar for mobile landscape */
 @media (orientation: landscape) and (max-width: 768px) {
     .navbar-toggler {
@@ -245,6 +244,97 @@
         overflow-y: auto;
     }
 }
+/*Design cho secondary navbar*/
+.secondary-navbar {
+    padding: 0.5rem 0;
+}
+
+.secondary-navbar-list {
+    gap: 0.75rem;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.secondary-navbar-list .nav-item {
+    flex: 0 0 auto;
+}
+
+.secondary-navbar .secondary-nav-link {
+    color: #4b4b4b;
+    padding: 0.45rem 1rem;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.secondary-navbar .secondary-nav-link:hover,
+.secondary-navbar .secondary-nav-link.active {
+    color: #ffffff;
+    background-color: #2e7d32;
+}
+/* Responsive design for secondary navbar on mobile */
+@media (max-width: 768px) {
+    .secondary-navbar-list {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .secondary-navbar-list::-webkit-scrollbar {
+        display: none;
+    }
+
+    .secondary-navbar .secondary-nav-link {
+        white-space: nowrap;
+    }
+}
+
+.notification-dropdown {
+    position: relative;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-menu {
+    width: 340px;
+    min-width: 280px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    white-space: normal;
+}
+
+.notification-text {
+    font-size: 0.85rem;
+}
+
+.admin-notification-form {
+    background-color: #f7fbf6;
+}
+
+.admin-notification-form .form-control-sm {
+    border-radius: 0.85rem;
+}
+
+.admin-notification-form .btn-success {
+    border-radius: 0.85rem;
+}
 
 @media (max-width: 981px) {
     .dropdown-menu {
@@ -252,7 +342,7 @@
         overflow-y: auto;
     }
 }
-
+/*Design cho flash sale*/
 .flash-sale {
     border: 1px solid #ddd;
     padding: 10px;

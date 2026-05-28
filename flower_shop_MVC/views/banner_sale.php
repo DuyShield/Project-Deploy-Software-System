@@ -46,7 +46,7 @@
                             <option value="">-- Chọn sản phẩm sale --</option>
                             <?php foreach ($products as $prod): ?>
                                 <option value="<?= $prod['id_product'] ?>" <?= (isset($homeSettings['sale_product_id']) && $homeSettings['sale_product_id'] == $prod['id_product']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($prod['name_product']) ?>
+                                    <?= $prod['name_product'] ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

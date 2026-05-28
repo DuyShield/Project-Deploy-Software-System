@@ -10,11 +10,22 @@ class M_Product
     {
         $this->db = new Database();
     }
-    //Lấy tất cả sản phẩm
-    public function getAllProducts()
+    //Lấy tất cả sản phẩm hoặc lấy theo phân trang
+    public function getAllProducts($limit = null, $offset = null)
     {
         $sql = "SELECT p.*, c.name_category FROM products p LEFT JOIN categories c ON p.id_category = c.id_category";
+        if ($limit !== null && $offset !== null) {
+            $sql .= " LIMIT ? OFFSET ?";
+            return $this->db->select($sql, "ii", [$limit, $offset]);
+        }
         return $this->db->select($sql);
+    }
+    // Lấy tổng số sản phẩm
+    public function getProductCount()
+    {
+        $sql = "SELECT COUNT(*) AS count FROM products";
+        $result = $this->db->select($sql);
+        return !empty($result) ? (int)$result[0]['count'] : 0;
     }
     //Lấy sản phẩm theo ID
     public function getProductById($id)

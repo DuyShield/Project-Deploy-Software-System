@@ -142,11 +142,7 @@ class C_Cart
             foreach ($cartItems as $itemKey => $item) {
                 $productId = $item['id_product'] ?? $itemKey;
                 $cartTotal += $item['price_product'] * $item['quantity'];
-<<<<<<< HEAD
                 if ((string) $productId === (string) $id) {
-=======
-                if ((string)$productId === (string)$id) {
->>>>>>> flower-shop
                     $updatedQuantity = $item['quantity'];
                     $itemPrice = $item['price_product'];
                     $itemExists = true;
@@ -184,11 +180,7 @@ class C_Cart
         $modelCart = new M_Cart();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['selected_items'])) {
-<<<<<<< HEAD
             $selectedItems = array_map('intval', (array) $_POST['selected_items']);
-=======
-            $selectedItems = array_map('intval', (array)$_POST['selected_items']);
->>>>>>> flower-shop
             $cartItems = $modelCart->getCartByAccount($id_account, $selectedItems);
         } else {
             $cartItems = $modelCart->getCartByAccount($id_account);
@@ -211,11 +203,7 @@ class C_Cart
             $payment_method = $_POST['payment'] ?? 'cod';
             $total_money = $_POST['total_price'] ?? 0;
             $address = trim($_POST['address'] ?? '');
-<<<<<<< HEAD
             $selectedItems = !empty($_POST['selected_items']) ? array_map('intval', (array) $_POST['selected_items']) : [];
-=======
-            $selectedItems = !empty($_POST['selected_items']) ? array_map('intval', (array)$_POST['selected_items']) : [];
->>>>>>> flower-shop
 
             if ($name === '' || $email === '' || $phone === '' || $address === '') {
                 $_SESSION['checkout_error'] = 'Vui lòng điền đầy đủ họ tên, email, số điện thoại và địa chỉ.';

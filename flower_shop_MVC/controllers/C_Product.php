@@ -1,21 +1,42 @@
 <?php
 require_once "model/M_Product.php";
 require_once "model/M_Category.php";
+require_once "model/M_User.php";
 class C_Product
 {
     //Trang chủ hiển thị tất cả sản phẩm
     public function home()
     {
         $model = new M_Product();
-        $products = $model->getAllProducts();
+        $userModel = new M_User();
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $limit = 8;
+        $offset = ($page - 1) * $limit;
+        // Lấy sản phẩm theo phân trang
+        $products = $model->getAllProducts($limit, $offset);
+        $totalProducts = $model->getProductCount();
+        $totalPages = max(1, (int) ceil($totalProducts / $limit));
         $homeSettings = $model->getHomeSettings();
         $saleProduct = null;
+        $saleProductRating = ['avg_rating' => 0, 'total_reviews' => 0];
+        // Lấy thông báo global để hiển thị ở phần chính của trang chủ
+        $homeNotifications = [];
+
         if (!empty($homeSettings['sale_product_id'])) {
             $saleProduct = $model->getProductById((int)$homeSettings['sale_product_id']);
+            if (!empty($saleProduct)) {
+                $saleProductRating = $model->getAverageRating((int)$homeSettings['sale_product_id']);
+            }
         }
+
+        if (isset($_SESSION['user'])) {
+            // Ở trang home chỉ lấy thông báo global để hiển thị ở phần chính
+            $homeNotifications = $userModel->getGlobalNotificationsForUser($_SESSION['user']['id'], 5);
+        }
+
         include "views/home.php";
     }
-    //Trang hiển thị tất cả sản phẩm
+    //Trang hiển thị tất cả sản phẩm lọc theo danh mục hoặc tìm kiếm nâng cao
     public function home_product()
     {
         $model = new M_Product();
@@ -102,6 +123,7 @@ class C_Product
         $categories = $categoryModel->getAllCategories(); // Thêm categories để hiển thị bộ lọc
         $isSearch = true;
         $showFilters = true;
+        $showSearchKeyword = true; // Biến để hiển thị từ khóa tìm kiếm trên giao diện
         include "views/home.php";
     }
     // Hiển thị trang viết đánh giá

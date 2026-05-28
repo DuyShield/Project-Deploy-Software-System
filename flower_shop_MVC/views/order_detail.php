@@ -9,10 +9,9 @@
             </p>
         </div>
         <?php
-        $returnAction = 'my_orders';
-        if (isset($_GET['return']) && $_GET['return'] === 'order_lists') {
-            $returnAction = 'order_lists';
-        }
+        $returnPage = isset($_GET['return']) ? $_GET['return'] : 'my_orders';
+        $returnAction = $returnPage;
+        $showAction = ($isDelivered && $returnPage === 'my_orders');
         ?>
         <a href="index.php?action=<?= $returnAction ?>" class="btn btn-outline-secondary fw-bold shadow-sm">
             <i class="fas fa-chevron-left"></i> QUAY LẠI
@@ -52,13 +51,13 @@
         <div class="col-md-8">
             <div class="table-responsive shadow-sm rounded">
                 <table class="table align-middle bg-white mb-0">
-                    <thead class="table-color text-white">
+                    <thead class="table-color text-black">
                         <tr>
                             <th class="py-3">Sản phẩm</th>
                             <th class="text-center py-3">Giá</th>
                             <th class="text-center py-3">Số lượng</th>
                             <th class="text-end py-3">Thành tiền</th>
-                            <?php if ($isDelivered): ?>
+                            <?php if ($isDelivered && $showAction): ?>
                                 <th class="text-center py-3">Hành động</th>
                             <?php endif; ?>
                         </tr>
@@ -78,7 +77,7 @@
                                 <td class="text-center"><?= $item['quantity'] ?></td>
                                 <td class="text-end fw-bold"><?= number_format($item['price'] * $item['quantity']) ?>đ</td>
 
-                                <?php if ($isDelivered): ?>
+                                <?php if ($isDelivered && $showAction): ?>
                                     <td class="text-center">
                                         <a href="index.php?action=write_review&id_product=<?= $item['id_product'] ?>&id_order=<?= $order['id_order'] ?>"
                                             class="btn btn-sm btn-success rounded-pill px-3 shadow-sm">
@@ -92,7 +91,7 @@
                     <!-- Hiển thị tổng tiền ở cuối bảng -->
                     <tfoot class="bg-light">
                         <tr>
-                            <td colspan="<?= $totalColumns - 1 ?>" class="text-end fw-bold py-3">
+                            <td colspan="<?= ($isDelivered && !$isMyOrder) ? 4 : 3 ?>" class="text-end fw-bold py-3">
                                 <?php
                                 echo ($order['status'] == 2) ? "Tổng tiền:" : "Tổng tiền thanh toán:";
                                 ?>

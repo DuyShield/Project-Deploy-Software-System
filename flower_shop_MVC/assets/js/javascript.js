@@ -93,56 +93,54 @@
             console.error("Lỗi lấy dữ liệu:", error);
         }
     };
-    //Lấy phần tử select của Tỉnh, Quận và xã
-    const provinceEl = document.getElementById("province");
-    const districtEl = document.getElementById("district");
-    const wardEl = document.getElementById("ward");
-    //Xử lý tỉnh
-    if (provinceEl) {
-        // Khởi tạo danh sách tỉnh
-        callAPI(host + "?depth=1", "province");
+    //Lấy phần tử select của Tỉnh, Quận và xã và gán sự kiện khi DOM đã sẵn sàng
+    document.addEventListener('DOMContentLoaded', function () {
+        const provinceEl = document.getElementById("province");
+        const districtEl = document.getElementById("district");
+        const wardEl = document.getElementById("ward");
 
-        provinceEl.addEventListener("change", function () {
-            const provinceCode = this.value;
+        if (provinceEl) {
+            // Khởi tạo danh sách tỉnh
+            callAPI(host + "?depth=1", "province");
 
-            // Reset tất cả các cấp con khi tỉnh thay đổi
-            ["district", "ward"].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = '<option value="">Chọn...</option>';
-                document.getElementById(`${id}-group`)?.classList.remove('group-show');
+            provinceEl.addEventListener("change", function () {
+                const provinceCode = this.value;
+
+                // Reset tất cả các cấp con khi tỉnh thay đổi
+                ["district", "ward"].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '<option value="">Chọn...</option>';
+                    document.getElementById(`${id}-group`)?.classList.remove('group-show');
+                });
+
+                if (provinceCode) {
+                    callAPI(`${host}p/${provinceCode}?depth=2`, "district", "district-group");
+                }
             });
+        }
 
-            if (provinceCode) {
-                callAPI(`${host}p/${provinceCode}?depth=2`, "district", "district-group");
-            }
-        });
-    }
+        if (districtEl) {
+            districtEl.addEventListener("change", function () {
+                const districtCode = this.value;
 
-    //Xử lý quận
-    if (districtEl) {
-        districtEl.addEventListener("change", function () {
-            const districtCode = this.value;
+                const wardSelect = document.getElementById("ward");
+                const wardGroup = document.getElementById("ward-group");
 
-            // Reset cấp phường xã khi quận thay đổi
-            const wardSelect = document.getElementById("ward");
-            const wardGroup = document.getElementById("ward-group");
+                if (wardSelect) wardSelect.innerHTML = '<option value="">Chọn...</option>';
+                wardGroup?.classList.remove('group-show');
 
-            if (wardSelect) wardSelect.innerHTML = '<option value="">Chọn...</option>';
-            wardGroup?.classList.remove('group-show');
+                if (districtCode) {
+                    callAPI(`${host}d/${districtCode}?depth=2`, "ward", "ward-group");
+                }
+            });
+        }
 
-            if (districtCode) {
-                callAPI(`${host}d/${districtCode}?depth=2`, "ward", "ward-group");
-            }
-        });
-    }
-
-    //Xử lý phường xã
-    if (wardEl) {
-        wardEl.addEventListener("change", function () {
-            // Cấp cuối cùng thường không gọi API nữa
-            console.log("Người dùng đã chọn Phường/Xã mã số:", this.value);
-        });
-    }
+        if (wardEl) {
+            wardEl.addEventListener("change", function () {
+                console.log("Người dùng đã chọn Phường/Xã mã số:", this.value);
+            });
+        }
+    });
     //Hàm thay đổi phương thức thanh toán
     function changeActivePayment(element) {
         //Tìm tất cả các thẻ label có class 'js-payment-card'
@@ -337,7 +335,6 @@
                 });
         });
     });
-<<<<<<< HEAD
     //Xử lý sự kiện show của Modal xóa wishlist
     document.addEventListener('DOMContentLoaded', function () {
         const modalDelete = document.getElementById('modalDelete');
@@ -370,15 +367,10 @@
         document.getElementById('passwordUsername').textContent = username;
     }
     
-=======
->>>>>>> flower-shop
 }
 
 
 
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> flower-shop

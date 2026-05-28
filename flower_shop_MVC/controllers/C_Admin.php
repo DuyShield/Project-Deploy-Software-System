@@ -117,15 +117,66 @@ class C_Admin
             $reply = $_POST['reply'];
             $model = new M_User();
             if ($model->updateReply($id, $reply)) {
+                $contact = $model->getContactById($id);
+                if (!empty($contact['user_id'])) {
+                    $model->addNotification(
+                        'Admin đã trả lời liên hệ',
+                        'Admin đã trả lời tin nhắn của bạn. Vui lòng kiểm tra lại.',
+                        'personal',
+                        $contact['user_id'],
+                        'info'
+                    );
+                }
                 $_SESSION['success'] = "Phản hồi đã được lưu thành công!";
                 header("Location: index.php?action=dashboard&tab=contacts");
                 exit();
-            }else {
+            } else {
                 $_SESSION['error'] = "Có lỗi xảy ra khi lưu phản hồi!";
                 header("Location: index.php?action=dashboard&tab=contacts");
                 exit();
             }
         }
+    }
+    //Gửi thông báo cho tất cả người dùng
+    public function send_notification()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $title = trim($_POST['title'] ?? '');
+            $message = trim($_POST['message'] ?? '');
+            if (empty($title) || empty($message)) {
+                $_SESSION['error'] = "Tiêu đề và nội dung không được để trống.";
+                header("Location: index.php?action=admin_notification_form");
+                exit();
+            }
+
+            $model = new M_User();
+            $notificationType = $_POST['notification_type'] ?? 'global';
+            $userId = isset($_POST['user_id']) && $_POST['user_id'] !== '' ? (int)$_POST['user_id'] : null;
+            $severity = $_POST['severity'] ?? 'info';
+            if ($notificationType === 'personal' && !$userId) {
+                $_SESSION['error'] = 'Vui lòng chọn người dùng khi gửi thông báo cá nhân.';
+                header("Location: index.php?action=admin_notification_form");
+                exit();
+            }
+            if ($notificationType !== 'personal') {
+                $userId = null;
+            }
+            if ($model->addNotification($title, $message, $notificationType, $userId, $severity)) {
+                $_SESSION['success'] = 'Thông báo đã được gửi thành công!';
+            } else {
+                $_SESSION['error'] = 'Không thể gửi thông báo. Vui lòng thử lại.';
+            }
+
+            header("Location: index.php?action=admin_notification_form");
+            exit();
+        }
+    }
+
+    public function notification_form()
+    {
+        $model = new M_User();
+        $users = $model->getAllUsers();
+        include "views/admin_notification_form.php";
     }
     //Cập nhật trạng thái đơn hàng
     public function update_status()
@@ -327,6 +378,7 @@ class C_Admin
 
             $model = new M_Product();
             $oldProduct = $model->getProductById($id);
+            $oldStock = isset($oldProduct['stock']) ? (int)$oldProduct['stock'] : 0;
             $oldImage = $oldProduct['image'];
             //Kiểm tra có chỉnh sửa ảnh mới không
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -359,6 +411,21 @@ class C_Admin
                 //Update sản phẩm khi không có thêm ảnh mới
                 $model->updateProductNoImage($id, $name, $description, $price, $category, $stock);
             }
+
+            if ($oldStock <= 0 && $stock > 0) {
+                $userModel = new M_User();
+                $wishUsers = $userModel->getWishlistUsersByProduct($id);
+                foreach ($wishUsers as $userId) {
+                    $userModel->addNotification(
+                        'Sản phẩm yêu thích đã có hàng',
+                        "Sản phẩm '{$name}' trong danh sách yêu thích của bạn đã có hàng trở lại.",
+                        'personal',
+                        $userId,
+                        'success'
+                    );
+                }
+            }
+
             $_SESSION['success'] = "Sản phẩm đã được cập nhật thành công!";
             header("Location: index.php?action=dashboard&tab=products");
             exit();

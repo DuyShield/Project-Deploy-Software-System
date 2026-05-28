@@ -24,6 +24,22 @@ class C_User
     {
         include "views/contact.php";
     }
+
+    //Hiển thị trang thông báo
+    public function notifications()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION['user'])) {
+            header("Location: index.php?action=login");
+            exit();
+        }
+        $userId = $_SESSION['user']['id'];
+        $notifications = $this->model->getNotificationsForUser($userId, 100);
+        $this->model->markNotificationsRead($userId);
+        include "views/notifications.php";
+    }
     //Xử lý đăng ký
     public function register_submit()
     {
@@ -77,6 +93,7 @@ class C_User
                 $role = ($roleData) ? trim($roleData['role']) : 'user';
                 // Lưu Session chính
                 $_SESSION['user'] = $user;
+                $_SESSION['user']['role'] = $role;
                 $_SESSION['role'] = $role;
 
                 // Lưu lịch sử đăng nhập
@@ -229,8 +246,10 @@ class C_User
             $user_id = $_SESSION['user']['id'];
             $username = trim($_POST['username']);
             $email = trim($_POST['email']);
-
-            if (empty($username) || empty($email)) {
+            $phone = trim($_POST['phone']);
+            $date_of_birth = trim($_POST['date_of_birth']);
+            
+            if (empty($username) || empty($email) || empty($phone) || empty($date_of_birth)) {
                 $_SESSION['error'] = "Vui lòng nhập đầy đủ thông tin!";
                 header("Location: index.php?action=profile");
                 exit();
@@ -251,7 +270,7 @@ class C_User
             }
 
             // Cập nhật profile (không có avatar)
-            $result = $this->model->updateProfile($user_id, $username, $email, null);
+            $result = $this->model->updateProfile($user_id, $username, $email, null, $phone, $date_of_birth);
             if ($result) {
                 // Cập nhật session
                 $_SESSION['user']['username'] = $username;
@@ -410,6 +429,7 @@ class C_User
     //Hiển thị chi tiết đơn hàng
     public function order_detail()
     {
+        // Kiểm tra session và quyền truy cập
         if (!isset($_GET['id'])) {
             header("Location: index.php?action=my_orders");
             exit();
@@ -418,7 +438,7 @@ class C_User
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-
+        //
         if (!isset($_SESSION['user'])) {
             header("Location: index.php?action=login");
             exit();
@@ -440,9 +460,10 @@ class C_User
         if (!$isOwner && !$isAdmin) {
             die("Bạn không có quyền xem đơn hàng này!");
         }
-
+        // Kiểm tra trạng thái đơn hàng để hiển thị cột "Đánh giá"
         $isDelivered = ($order['status'] == 2);
         $totalColumns = $isDelivered ? 5 : 4;
+        $isMyOrder = $isOwner;
         $items = $cartModel->getOrderItems($id_order);
         include "views/order_detail.php";
     }
