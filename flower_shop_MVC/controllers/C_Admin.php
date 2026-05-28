@@ -416,9 +416,10 @@ class C_Admin
                 $userModel = new M_User();
                 $wishUsers = $userModel->getWishlistUsersByProduct($id);
                 foreach ($wishUsers as $userId) {
+                    $notificationContent = "[product_id:{$id}]Sản phẩm '{$name}' trong danh sách yêu thích của bạn đã có hàng trở lại.";
                     $userModel->addNotification(
                         'Sản phẩm yêu thích đã có hàng',
-                        "Sản phẩm '{$name}' trong danh sách yêu thích của bạn đã có hàng trở lại.",
+                        $notificationContent,
                         'personal',
                         $userId,
                         'success'

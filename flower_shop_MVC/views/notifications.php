@@ -15,11 +15,12 @@
                             $content = $matches[2];
                         }
                         ?>
+                        <!-- Hiển thị thông báo với định dạng dựa trên mức độ nghiêm trọng -->
                         <div class="alert alert-<?= $severity ?> mb-3 rounded-3">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="mb-1"><?= $notif['title'] ?></h6>
-                                    <p class="mb-1 text-secondary small"><?= htmlspecialchars($content) ?></p>
+                                    <p class="mb-1 text-secondary small"><?= $content ?></p>
                                 </div>
                                 <small class="text-muted"><?= $notif['created_at'] ?></small>
                             </div>

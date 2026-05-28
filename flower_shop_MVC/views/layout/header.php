@@ -16,6 +16,7 @@ $catModel = new M_Category();
 $userModel = new M_User();
 $categories = $catModel->getAllCategories();
 $currentCategory = isset($_GET['category_id']) ? (int)$_GET['category_id'] : null;
+// Hàm để chuyển severity thành class Bootstrap tương ứng
 function getNotificationSeverityClass($severity)
 {
     return match ($severity) {
@@ -25,18 +26,29 @@ function getNotificationSeverityClass($severity)
         default => 'info',
     };
 }
-
+// Hàm để trích xuất severity và content từ thông báo, hỗ trợ cả trường hợp severity nằm trong content
 function parseNotificationSeverityAndContent(array $notif): array
 {
     $severity = $notif['severity'] ?? null;
     $content = $notif['content'] ?? '';
+    $productId = null; // Mặc định là không có link sản phẩm
+
+    // Nếu severity không tồn tại, cố gắng trích xuất từ content nếu có định dạng [severity:level]
     if (empty($severity) && preg_match('/^\[severity:(info|warning|danger|success)\](.*)$/s', $content, $matches)) {
         $severity = $matches[1];
         $content = $matches[2];
     }
+
+    // Kiểm tra nếu content có chứa tag product_id để trích xuất ID sản phẩm
+    if (preg_match('/^\[product_id:(\d+)\](.*)$/s', $content, $matches)) {
+        $productId = (int)$matches[1];
+        $content = $matches[2]; // Trả lại nội dung văn bản sạch không chứa tag
+    }
+
     return [
         'severity' => $severity ?: 'info',
         'content' => $content,
+        'product_id' => $productId // Trả thêm thông tin ID sản phẩm ra ngoài
     ];
 }
 
@@ -58,7 +70,7 @@ if ($userId !== null) {
 if ($currentAction === 'home') {
     // Truyền $userId (có thể là ID hoặc null) vào Model
     $globalNotifications = $userModel->getGlobalNotificationsForUser($userId, 5);
-    
+
     // Đếm số thông báo global chưa đọc
     foreach ($globalNotifications as $g) {
         // Chỉ tăng biến đếm nếu người dùng đã đăng nhập và thông báo đó chưa đọc
@@ -105,22 +117,33 @@ if ($currentAction === 'home') {
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 notification-menu" aria-labelledby="notificationMenuLink">
                             <?php if (!empty($notifications)): ?>
                                 <?php foreach ($notifications as $notif): ?>
-                                    <?php $parsedNotification = parseNotificationSeverityAndContent($notif); ?>
-                                    <?php $severityClass = getNotificationSeverityClass($parsedNotification['severity']); ?>
-                                    <?php $badgeTextClass = $severityClass === 'danger' ? 'text-white' : 'text-dark'; ?>
+                                    <?php
+                                    $parsedNotification = parseNotificationSeverityAndContent($notif);
+                                    $severityClass = getNotificationSeverityClass($parsedNotification['severity']);
+                                    $badgeTextClass = $severityClass === 'danger' ? 'text-white' : 'text-dark';
+
+                                    // Nếu có product_id thì dẫn tới trang chi tiết, ngược lại dẫn tới trang danh sách thông báo
+                                    $targetLink = !empty($parsedNotification['product_id'])
+                                        ? "index.php?action=detail&id=" . $parsedNotification['product_id']
+                                        : "index.php?action=notifications";
+                                    ?>
                                     <li>
-                                        <a class="dropdown-item notification-item" href="index.php?action=notifications">
-                                            <span class="badge bg-<?= $severityClass ?> <?= $badgeTextClass ?> me-2"><?= htmlspecialchars(strtoupper($severityClass)) ?></span>
+                                        <a class="dropdown-item notification-item" href="<?= $targetLink ?>">
+                                            <span class="badge bg-<?= $severityClass ?> <?= $badgeTextClass ?> me-2"><?= strtoupper($severityClass) ?></span>
                                             <strong><?= $notif['title'] ?></strong>
-                                            <div class="notification-text mb-1"><?= $parsedNotification['content'] ?></div>
+                                            <div class="notification-text mb-1"><?= htmlspecialchars($parsedNotification['content']) ?></div>
                                             <small class="text-muted"><?= $notif['created_at'] ?></small>
                                         </a>
                                     </li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li><div class="dropdown-item text-muted">Không có thông báo</div></li>
+                                <li>
+                                    <div class="dropdown-item text-muted">Không có thông báo</div>
+                                </li>
                             <?php endif; ?>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <li><a class="dropdown-item text-center" href="index.php?action=notifications">Xem tất cả thông báo</a></li>
                         </ul>
                     </div>
@@ -130,7 +153,7 @@ if ($currentAction === 'home') {
                         <a class="nav-link p-0 d-flex align-items-center" href="#" id="userMenuLink"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="assets/images/<?= ($_SESSION['user']['avatar'] == 'default.jpg') ? 'image_avatar_default/' : 'image_avatar_users/' ?><?= $_SESSION['user']['avatar'] ?>"
-                                 alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
+                                alt="Avatar" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
                             <span class="d-none d-md-inline"><?= $_SESSION['user']['username'] ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 custom-dropdown">
@@ -178,12 +201,14 @@ if ($currentAction === 'home') {
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="index.php?action=product">Tất cả sản phẩm</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
                             <?php if (!empty($categories)): ?>
                                 <?php foreach ($categories as $cat): ?>
                                     <li><a class="dropdown-item <?= ($currentAction === 'filter_by_category' && $currentCategory === $cat['id_category']) ? 'active' : '' ?>" href="index.php?action=filter_by_category&category_id=<?= $cat['id_category'] ?>">
-                                        <?= $cat['name_category'] ?>
-                                    </a></li>
+                                            <?= $cat['name_category'] ?>
+                                        </a></li>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </ul>

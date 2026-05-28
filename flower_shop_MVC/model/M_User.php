@@ -124,6 +124,8 @@ class M_User
             return $this->db->execute($sql, "issss", [$targetUserId, $title, $content, $severity]);
         } else {
             $sql = "INSERT INTO notifications (user_id, title, content, type, is_read, created_at) VALUES (?, ?, ?, ?, 0, NOW())";
+
+            // NẾU BẢNG KHÔNG CÓ CỘT SEVERITY: Gộp cả severity vào content như cũ
             $contentToSave = "[severity:$severity]" . $content;
             return $this->db->execute($sql, "isss", [$targetUserId, $title, $contentToSave, 'personal']);
         }

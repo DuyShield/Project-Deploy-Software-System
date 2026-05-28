@@ -13,7 +13,8 @@ class M_Product
     //Lấy tất cả sản phẩm hoặc lấy theo phân trang
     public function getAllProducts($limit = null, $offset = null)
     {
-        $sql = "SELECT p.*, c.name_category FROM products p LEFT JOIN categories c ON p.id_category = c.id_category";
+        $sql = "SELECT p.*, c.name_category FROM products p LEFT JOIN categories c 
+        ON p.id_category = c.id_category";
         if ($limit !== null && $offset !== null) {
             $sql .= " LIMIT ? OFFSET ?";
             return $this->db->select($sql, "ii", [$limit, $offset]);
@@ -57,7 +58,7 @@ class M_Product
 
         return array_merge($defaults, $data);
     }
-
+    //Lưu cài đặt home banner và sản phẩm sale
     public function saveHomeSettings($settings)
     {
         $path = __DIR__ . '/../config/home_settings.json';
